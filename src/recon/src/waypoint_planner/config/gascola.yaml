@@ -1,0 +1,5 @@
+# ---------------------------------------------------------------------------------
+#   Waypoint Planner -- parameters for specific to map being used
+# ---------------------------------------------------------------------------------
+map_height                   : 2209 # gascola specific
+map_width                    : 893 # gascola specific

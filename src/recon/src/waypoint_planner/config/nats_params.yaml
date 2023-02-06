@@ -1,0 +1,23 @@
+# ---------------------------------------------------------------------------------
+#   Waypoint Planner -- parameters for Noise Aware Thompson Sampling paradigm
+# ---------------------------------------------------------------------------------
+
+cell_size                    : 60   # in metres
+costmap_cell_size            : 0.5  # in metres
+costmap_vacancy_threshold    : 0.5  # fraction of a cell that should be empty for it to be traversable
+#logging_path                 : /home/nabakshi/hosthome/src/zone_recon/src/waypoint_planner/logdata/
+logging                      : true
+cross_pose_topic             : robot_objects
+distance_cost_weightage      : 0.0 #0.95    # relative weightage distance cost receives as compared to NATS reward
+visibility_cost_weightage    : 1.0    # relative weightage of visibility risk cost compared to NATS reward
+coverage_variance_topic      : heatmap_viz_coverage
+detected_threats_topic       : threats_viz
+threats_belief_topic         : heatmap_viz_threats
+nats_cell_selection_prob     : 1
+take_drone_path_into_account : true
+fov_setting                  : viewshed   #viewshed or conservative
+simultaneous_compute         : false # should it compute the next waypoint before it is done with the current one
+zone_clearing                : false
+use_threat_locs              : false
+threat_prior_inside_sp       : 0.05
+threat_prior_outside_sp      : 0.0

@@ -1,0 +1,28 @@
+<launch>
+  <arg name="robot_name" default="$(optenv ROBOT_NAME recbot0)" />
+  <arg name="atak_polygon" default="true" />
+  <arg name="param_file" default="$(find waypoint_planner)/config/default_parameters.yaml" />
+  <arg name="robot_type" default="" doc="optional override for robot type that doesn't require config change"/>
+  <arg name="nats_cell_selection_prob" default="" doc="optional override for NATS cell selection Probability that doesn't require config change"/>
+  <arg name="autonomy_server_topic" default="" doc="optional override for autonomy_server_topic that doesn't require config change" />
+  <arg name="location" default="ypg" />
+  <arg name="search_mode" default="" doc="optional override for search_mode that doesn't require config change" />
+  <arg name="map_type" default="aerial" />
+
+  <group ns="$(arg robot_name)">
+    <node name="evaluate_policies" pkg="waypoint_planner" type="evaluate_policies.py" output="screen">
+      <param name="robot_name" type="string" value="$(arg robot_name)" />
+      <!-- Load common configuration parameters -->
+      <rosparam command="load" file="$(arg param_file)" subst_value="true" />
+      <!-- Make argument in future to be able to select a different paradigm -->
+      <rosparam command="load" file="$(find waypoint_planner)/config/nats_params.yaml" subst_value="true" />
+      <!-- Comes into play only for UAS, defines bounds of map -->
+      <rosparam command="load" file="$(find waypoint_planner)/config/$(arg location).yaml" subst_value="true" />
+      <param name="robot_type" value="$(arg robot_type)" unless="$(eval arg('robot_type') == '')" />
+      <param name="nats_cell_selection_prob" value="$(arg nats_cell_selection_prob)" unless="$(eval arg('nats_cell_selection_prob') == '')" />
+      <param name="autonomy_server_topic" value="$(arg autonomy_server_topic)" unless="$(eval arg('autonomy_server_topic') == '')" />
+      <param name="search_mode" value="$(arg search_mode)" unless="$(eval arg('search_mode') == '')" />
+    </node>
+  </group>
+
+</launch>
