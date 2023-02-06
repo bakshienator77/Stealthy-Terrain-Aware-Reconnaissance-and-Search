@@ -1,40 +1,5 @@
 #!/usr/bin/env python
 
-# Copyright 2020
-#
-# National Robotics Engineering Center, Carnegie Mellon University
-# 10 40th Street, Pittsburgh, PA 15201
-# www.rec.ri.cmu.edu
-#
-# Control Instructions (who can see this code):
-# NREC Confidential.  Not for public release unless permission granted
-# by program manager.
-#
-# Usage Rights (who can use this code):
-# Usage allowed for all NREC programs with permissions from author and
-# program manager.
-#
-# This notice must appear in all copies of this file and its derivatives.
-#
-# Created under Program: AIDTR
-#
-
-'''
-Code for the work:
-
-``Multi Agent Active Search using Realistic Depth-Aware Noise Model'', Ramina Ghods, William J Durkin and Jeff Schneider
-
-(C) Ramina Ghods 2020 (rghods@cs.cmu.edu)
-Please cite the following paper to use the code:
-
-@article{ghods2020multi,
-  title={Multi-Agent Active Search using Realistic Depth-Aware Noise Model},
-  author={Ghods, Ramina and Durkin, William J and Schneider, Jeff},
-  journal={arXiv preprint arXiv:2011.04825},
-  year={2020}
-}
-'''
-
 from __future__ import print_function
 
 import numpy as np

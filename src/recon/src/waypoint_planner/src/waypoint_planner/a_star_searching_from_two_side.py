@@ -1,8 +1,5 @@
 """
 A* algorithm
-Author: Weicent
-randomly generate obstacles, start and goal point
-searching path from start and end simultaneously
 """
 
 from __future__ import absolute_import

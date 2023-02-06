@@ -1,21 +1,6 @@
 #!/usr/bin/env python
 from __future__ import print_function
 
-'''
-Code for the work:
-
-``Stealthy Multi-Agent Active Search for Terrain-Aware Ground-Based Search Agents'', Nikhil Angad Bakshi and Jeff Schneider
-
-(C) Nikhil Angad Bakshi 2023 (nabakshi@andrew.cmu.edu)
-Please cite the following paper to use the code:
-
-@article{bakshi2023multi,
-  title={Stealthy Multi-Agent Active Search for Terrain-Aware Ground-Based Search Agents},
-  author={Bakshi, Nikhil Angad and Schneider, Jeff},
-  journal={},
-  year={2023}
-}
-'''
 
 """
 Purpose of this code is to pretend to be autonomy and hence should provide costmap, local pose

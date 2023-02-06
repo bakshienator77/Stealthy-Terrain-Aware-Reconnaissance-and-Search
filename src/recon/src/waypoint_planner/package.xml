@@ -3,7 +3,7 @@
   <name>waypoint_planner</name>
   <version>0.0.2</version>
   <description>The waypoint_planner package</description>
-  <maintainer email="nabakshi@andrew.cmu.edu">Nikhil Angad Bakshi</maintainer>
+  <maintainer email="xxx">xxx</maintainer>
   <license>Proprietary</license>
 
   <buildtool_depend>catkin</buildtool_depend>

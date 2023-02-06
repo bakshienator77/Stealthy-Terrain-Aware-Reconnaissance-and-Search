@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 #
-# This notice must appear in all copies of this file and its derivatives.
-#
-# Created under Program: AIDTR
 #
 ## ! DO NOT MANUALLY INVOKE THIS setup.py, USE CATKIN INSTEAD
 
