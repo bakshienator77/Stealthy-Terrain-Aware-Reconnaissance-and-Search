@@ -1,6 +1,6 @@
 ## Anonymous Repo for Stealthy Terrain-Aware Multi-Agent Active Search
 
-This repo has been anonymized and hence may not be runnable.
+This repo has been anonymized.
 
 In order to run the repo run the dependencies are ROS melodic and python2.7 with numpy, matplotlib and PIL.
 
