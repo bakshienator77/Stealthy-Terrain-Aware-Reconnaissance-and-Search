@@ -1,0 +1,215 @@
+<launch>
+    <arg name="robot1_name" default="$(optenv ROBOT_NAME recbot0)" />
+    <arg name="robot2_name" default="$(optenv ROBOT_NAME recbot0)" />
+    <arg name="robot3_name" default="$(optenv ROBOT_NAME recbot0)" />
+    <arg name="robot4_name" default="$(optenv ROBOT_NAME recbot0)" />
+    <arg name="robot5_name" default="$(optenv ROBOT_NAME recbot0)" />
+    <arg name="robot6_name" default="$(optenv ROBOT_NAME recbot0)" />
+    <arg name="robot7_name" default="$(optenv ROBOT_NAME recbot0)" />
+    <arg name="robot8_name" default="$(optenv ROBOT_NAME recbot0)" />
+    <arg name="atak_polygon" default="true" />
+    <arg name="param_file" default="$(find waypoint_planner)/config/default_parameters.yaml" />
+    <arg name="robot_type" default="" doc="optional override for robot type that doesn't require config change"/>
+    <arg name="nats_cell_selection_prob" default="" doc="optional override for NATS cell selection Probability that doesn't require config change"/>
+    <arg name="autonomy_server_topic" default="" doc="optional override for autonomy_server_topic that doesn't require config change" />
+    <arg name="location" default="ntc" />
+    <arg name="search_mode" default="" doc="optional override for search_mode that doesn't require config change" />
+    <arg name="visibility_cost_weightage" default="" doc="optional override for visibility_cost_weightage that doesn't require config change" />
+    <arg name="distance_cost_weightage" default="" doc="optional override for distance_cost_weightage that doesn't require config change" />
+    <arg name="map_type" default="aerial_v03" />
+    <arg name="log_config" default="zone_recon_metrics1" />
+    <arg name="log_dir" default="$(optenv BAG_LOG_DIR)" />
+    <arg name="logging_path" default="$(arg log_dir)/$(arg log_config)/" if="$(eval log_dir != '')"/>
+    <arg name="logging_path" default="$(env ROS_LOG_DIR)/$(arg log_config)/" unless="$(eval log_dir != '')"/>
+    <arg name="enable_zone_recon_evaluation" default="false" doc="set true to evaluate zone_recon"/>
+    <arg name="random_seed" default="0" />
+    <arg name="threat_sampling" default="uniform" doc="[uniform, stealth]" />
+    <arg name="simulate_crosspose" default="true" doc="when running in autonomy simulator with multiple agents set as true" />
+    <arg name="autonomy_faker" default="false" doc="prevents the need to launch aidtr autonomy, faster simplified simulator" />
+    <arg name="num_targets" default="5" doc="number of targets to simulate"/>
+
+
+    <include file="$(find waypoint_planner)/launch/waypoint_planner.launch">
+        <arg name="robot_name" value="$(arg robot1_name)" />
+        <arg name="map_type" value="$(arg map_type)" />
+        <arg name="location" value="$(arg location)" />
+        <arg name="atak_polygon" value="$(arg atak_polygon)" />
+        <arg name="param_file" value="$(arg param_file)" />
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="nats_cell_selection_prob" value="$(arg nats_cell_selection_prob)" />
+        <arg name="autonomy_server_topic" value="$(arg autonomy_server_topic)" />
+        <arg name="search_mode" value="$(arg search_mode)" />
+        <arg name="visibility_cost_weightage" value="$(arg visibility_cost_weightage)" />
+        <arg name="distance_cost_weightage" value="$(arg distance_cost_weightage)" />
+        <arg name="log_config" value="$(arg log_config)" />
+        <arg name="log_dir" value="$(arg log_dir)" />
+        <arg name="logging_path" value="$(arg logging_path)" />
+        <arg name="enable_zone_recon_evaluation" value="$(arg enable_zone_recon_evaluation)" />
+        <arg name="random_seed" value="$(arg random_seed)" />
+        <arg name="threat_sampling" value="$(arg threat_sampling)" />
+        <arg name="autonomy_faker" value="$(arg autonomy_faker)" />
+        <arg name="simulate_crosspose" value="$(arg simulate_crosspose)" />
+        <arg name="num_targets" value="$(arg num_targets)" />
+    </include>
+
+    <include file="$(find waypoint_planner)/launch/waypoint_planner.launch">
+        <arg name="robot_name" value="$(arg robot2_name)" />
+        <arg name="map_type" value="$(arg map_type)" />
+        <arg name="location" value="$(arg location)" />
+        <arg name="atak_polygon" value="$(arg atak_polygon)" />
+        <arg name="param_file" value="$(arg param_file)" />
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="nats_cell_selection_prob" value="$(arg nats_cell_selection_prob)" />
+        <arg name="autonomy_server_topic" value="$(arg autonomy_server_topic)" />
+        <arg name="search_mode" value="$(arg search_mode)" />
+        <arg name="visibility_cost_weightage" value="$(arg visibility_cost_weightage)" />
+        <arg name="distance_cost_weightage" value="$(arg distance_cost_weightage)" />
+        <arg name="log_config" value="$(arg log_config)" />
+        <arg name="log_dir" value="$(arg log_dir)" />
+        <arg name="logging_path" value="$(arg logging_path)" />
+        <arg name="enable_zone_recon_evaluation" value="$(arg enable_zone_recon_evaluation)" />
+        <arg name="random_seed" value="$(arg random_seed)" />
+        <arg name="threat_sampling" value="$(arg threat_sampling)" />
+        <arg name="autonomy_faker" value="$(arg autonomy_faker)" />
+        <arg name="simulate_crosspose" value="$(arg simulate_crosspose)" />
+        <arg name="num_targets" value="$(arg num_targets)" />
+    </include>
+
+    <include file="$(find waypoint_planner)/launch/waypoint_planner.launch">
+        <arg name="robot_name" value="$(arg robot3_name)" />
+        <arg name="map_type" value="$(arg map_type)" />
+        <arg name="location" value="$(arg location)" />
+        <arg name="atak_polygon" value="$(arg atak_polygon)" />
+        <arg name="param_file" value="$(arg param_file)" />
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="nats_cell_selection_prob" value="$(arg nats_cell_selection_prob)" />
+        <arg name="autonomy_server_topic" value="$(arg autonomy_server_topic)" />
+        <arg name="search_mode" value="$(arg search_mode)" />
+        <arg name="visibility_cost_weightage" value="$(arg visibility_cost_weightage)" />
+        <arg name="distance_cost_weightage" value="$(arg distance_cost_weightage)" />
+        <arg name="log_config" value="$(arg log_config)" />
+        <arg name="log_dir" value="$(arg log_dir)" />
+        <arg name="logging_path" value="$(arg logging_path)" />
+        <arg name="enable_zone_recon_evaluation" value="$(arg enable_zone_recon_evaluation)" />
+        <arg name="random_seed" value="$(arg random_seed)" />
+        <arg name="threat_sampling" value="$(arg threat_sampling)" />
+        <arg name="autonomy_faker" value="$(arg autonomy_faker)" />
+        <arg name="simulate_crosspose" value="$(arg simulate_crosspose)" />
+        <arg name="num_targets" value="$(arg num_targets)" />
+    </include>
+
+    <include file="$(find waypoint_planner)/launch/waypoint_planner.launch">
+        <arg name="robot_name" value="$(arg robot4_name)" />
+        <arg name="map_type" value="$(arg map_type)" />
+        <arg name="location" value="$(arg location)" />
+        <arg name="atak_polygon" value="$(arg atak_polygon)" />
+        <arg name="param_file" value="$(arg param_file)" />
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="nats_cell_selection_prob" value="$(arg nats_cell_selection_prob)" />
+        <arg name="autonomy_server_topic" value="$(arg autonomy_server_topic)" />
+        <arg name="search_mode" value="$(arg search_mode)" />
+        <arg name="visibility_cost_weightage" value="$(arg visibility_cost_weightage)" />
+        <arg name="distance_cost_weightage" value="$(arg distance_cost_weightage)" />
+        <arg name="log_config" value="$(arg log_config)" />
+        <arg name="log_dir" value="$(arg log_dir)" />
+        <arg name="logging_path" value="$(arg logging_path)" />
+        <arg name="enable_zone_recon_evaluation" value="$(arg enable_zone_recon_evaluation)" />
+        <arg name="random_seed" value="$(arg random_seed)" />
+        <arg name="threat_sampling" value="$(arg threat_sampling)" />
+        <arg name="autonomy_faker" value="$(arg autonomy_faker)" />
+        <arg name="simulate_crosspose" value="$(arg simulate_crosspose)" />
+        <arg name="num_targets" value="$(arg num_targets)" />
+    </include>
+
+    <include file="$(find waypoint_planner)/launch/waypoint_planner.launch">
+        <arg name="robot_name" value="$(arg robot5_name)" />
+        <arg name="map_type" value="$(arg map_type)" />
+        <arg name="location" value="$(arg location)" />
+        <arg name="atak_polygon" value="$(arg atak_polygon)" />
+        <arg name="param_file" value="$(arg param_file)" />
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="nats_cell_selection_prob" value="$(arg nats_cell_selection_prob)" />
+        <arg name="autonomy_server_topic" value="$(arg autonomy_server_topic)" />
+        <arg name="search_mode" value="$(arg search_mode)" />
+        <arg name="visibility_cost_weightage" value="$(arg visibility_cost_weightage)" />
+        <arg name="distance_cost_weightage" value="$(arg distance_cost_weightage)" />
+        <arg name="log_config" value="$(arg log_config)" />
+        <arg name="log_dir" value="$(arg log_dir)" />
+        <arg name="logging_path" value="$(arg logging_path)" />
+        <arg name="enable_zone_recon_evaluation" value="$(arg enable_zone_recon_evaluation)" />
+        <arg name="random_seed" value="$(arg random_seed)" />
+        <arg name="threat_sampling" value="$(arg threat_sampling)" />
+        <arg name="autonomy_faker" value="$(arg autonomy_faker)" />
+        <arg name="simulate_crosspose" value="$(arg simulate_crosspose)" />
+        <arg name="num_targets" value="$(arg num_targets)" />
+    </include>
+
+    <include file="$(find waypoint_planner)/launch/waypoint_planner.launch">
+        <arg name="robot_name" value="$(arg robot6_name)" />
+        <arg name="map_type" value="$(arg map_type)" />
+        <arg name="location" value="$(arg location)" />
+        <arg name="atak_polygon" value="$(arg atak_polygon)" />
+        <arg name="param_file" value="$(arg param_file)" />
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="nats_cell_selection_prob" value="$(arg nats_cell_selection_prob)" />
+        <arg name="autonomy_server_topic" value="$(arg autonomy_server_topic)" />
+        <arg name="search_mode" value="$(arg search_mode)" />
+        <arg name="visibility_cost_weightage" value="$(arg visibility_cost_weightage)" />
+        <arg name="distance_cost_weightage" value="$(arg distance_cost_weightage)" />
+        <arg name="log_config" value="$(arg log_config)" />
+        <arg name="log_dir" value="$(arg log_dir)" />
+        <arg name="logging_path" value="$(arg logging_path)" />
+        <arg name="enable_zone_recon_evaluation" value="$(arg enable_zone_recon_evaluation)" />
+        <arg name="random_seed" value="$(arg random_seed)" />
+        <arg name="threat_sampling" value="$(arg threat_sampling)" />
+        <arg name="autonomy_faker" value="$(arg autonomy_faker)" />
+        <arg name="simulate_crosspose" value="$(arg simulate_crosspose)" />
+        <arg name="num_targets" value="$(arg num_targets)" />
+    </include>
+
+    <include file="$(find waypoint_planner)/launch/waypoint_planner.launch">
+        <arg name="robot_name" value="$(arg robot7_name)" />
+        <arg name="map_type" value="$(arg map_type)" />
+        <arg name="location" value="$(arg location)" />
+        <arg name="atak_polygon" value="$(arg atak_polygon)" />
+        <arg name="param_file" value="$(arg param_file)" />
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="nats_cell_selection_prob" value="$(arg nats_cell_selection_prob)" />
+        <arg name="autonomy_server_topic" value="$(arg autonomy_server_topic)" />
+        <arg name="search_mode" value="$(arg search_mode)" />
+        <arg name="visibility_cost_weightage" value="$(arg visibility_cost_weightage)" />
+        <arg name="distance_cost_weightage" value="$(arg distance_cost_weightage)" />
+        <arg name="log_config" value="$(arg log_config)" />
+        <arg name="log_dir" value="$(arg log_dir)" />
+        <arg name="logging_path" value="$(arg logging_path)" />
+        <arg name="enable_zone_recon_evaluation" value="$(arg enable_zone_recon_evaluation)" />
+        <arg name="random_seed" value="$(arg random_seed)" />
+        <arg name="threat_sampling" value="$(arg threat_sampling)" />
+        <arg name="autonomy_faker" value="$(arg autonomy_faker)" />
+        <arg name="simulate_crosspose" value="$(arg simulate_crosspose)" />
+        <arg name="num_targets" value="$(arg num_targets)" />
+    </include>
+
+    <include file="$(find waypoint_planner)/launch/waypoint_planner.launch">
+        <arg name="robot_name" value="$(arg robot8_name)" />
+        <arg name="map_type" value="$(arg map_type)" />
+        <arg name="location" value="$(arg location)" />
+        <arg name="atak_polygon" value="$(arg atak_polygon)" />
+        <arg name="param_file" value="$(arg param_file)" />
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="nats_cell_selection_prob" value="$(arg nats_cell_selection_prob)" />
+        <arg name="autonomy_server_topic" value="$(arg autonomy_server_topic)" />
+        <arg name="search_mode" value="$(arg search_mode)" />
+        <arg name="visibility_cost_weightage" value="$(arg visibility_cost_weightage)" />
+        <arg name="distance_cost_weightage" value="$(arg distance_cost_weightage)" />
+        <arg name="log_config" value="$(arg log_config)" />
+        <arg name="log_dir" value="$(arg log_dir)" />
+        <arg name="logging_path" value="$(arg logging_path)" />
+        <arg name="enable_zone_recon_evaluation" value="$(arg enable_zone_recon_evaluation)" />
+        <arg name="random_seed" value="$(arg random_seed)" />
+        <arg name="threat_sampling" value="$(arg threat_sampling)" />
+        <arg name="autonomy_faker" value="$(arg autonomy_faker)" />
+        <arg name="simulate_crosspose" value="$(arg simulate_crosspose)" />
+        <arg name="num_targets" value="$(arg num_targets)" />
+    </include>
+</launch>

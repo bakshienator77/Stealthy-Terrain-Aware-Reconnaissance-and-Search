@@ -1,0 +1,7 @@
+# Service request fields 
+time stamp # Request origination ROS timestamp (secs + nano secs)
+---
+# Service response fields
+time stamp # Response origination ROS timestamp (secs + nano secs)
+bool success   # true if the call was successful, false otherwise
+string message # informational, e.g. for error messages

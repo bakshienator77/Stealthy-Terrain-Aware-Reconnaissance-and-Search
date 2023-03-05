@@ -1,0 +1,9 @@
+Header header
+float32   velocity_mps
+float32   curvature
+float32   steeringPosition
+float32   brakePosition
+bool      estopActive
+bool      driveActive
+bool      directActive
+uint8     robotState

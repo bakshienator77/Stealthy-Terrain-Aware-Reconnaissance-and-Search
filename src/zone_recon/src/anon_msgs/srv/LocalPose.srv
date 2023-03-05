@@ -1,0 +1,10 @@
+# Request specification
+Header header
+time request_stamp #Time at which the odometry is requested
+---
+
+# Response specification
+Header header
+uint32 error_code #This is an integer value to specify an error code. 0 indicates no error state. If odometry is unavailable, an error code needs to be raised.
+string error_message #Optional string to forward any error message text.
+nav_msgs/Odometry odom #Odometry at requested time

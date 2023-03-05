@@ -1,0 +1,25 @@
+# Goal
+string uuid
+nav_msgs/Path path
+
+# If this flag is set, a global planner will be used to generate waypoints between input waypoints 
+bool interpolate_between_waypoints
+
+# If this flag is set, we will attempt to use planners that can handle large maps
+# The definition of large here is, area > 4 km^2 
+bool large_map
+---
+# Response
+
+# Enum for result
+uint8 SUCCESS=1
+uint8 FAILED=0
+
+string uuid # Same uuid that was passed in the goal.
+uint8 result
+---
+# Feedback
+string uuid # Same uuid that was passed in the goal.
+
+# Global plan generated for the requested mission
+nav_msgs/Path path

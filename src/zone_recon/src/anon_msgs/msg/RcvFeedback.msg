@@ -1,0 +1,13 @@
+Header header
+float32 throttle_cmd
+float32 throttle_measured
+float32 brake_cmd
+float32 brake_measured
+float32 steering_cmd
+float32 steering_measured
+string system_mode
+string operating_state
+string error_state
+string error_code
+float32 right_track_speed
+float32 left_track_speed

@@ -1,0 +1,5 @@
+# ---------------------------------------------------------------------------------
+#   Waypoint Planner -- parameters for specific to map being used
+# ---------------------------------------------------------------------------------
+map_height                   : 2555 # YPG specific
+map_width                    : 2917 # YPG specific

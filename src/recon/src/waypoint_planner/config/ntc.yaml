@@ -1,5 +1,0 @@
-# ---------------------------------------------------------------------------------
-#   Waypoint Planner -- parameters for specific to map being used
-# ---------------------------------------------------------------------------------
-map_height                   : 3675 # ntc specific
-map_width                    : 4611 # ntc specific

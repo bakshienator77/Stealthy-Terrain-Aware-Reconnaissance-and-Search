@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>anon_ros_msgs</name>
+  <version>0.0.0</version>
+    <description>
+        The package that contains all (ros?) messages used by anon project
+    </description>
+
+    <maintainer email="anon@gmail.com">
+        anon
+    </maintainer>
+
+    <license>
+        MIT license
+    </license>
+
+    <buildtool_depend> catkin </buildtool_depend>
+    <build_depend> std_msgs </build_depend>
+    <build_depend> geometry_msgs </build_depend>
+    <build_depend> sensor_msgs </build_depend>
+    <build_export_depend> std_msgs </build_export_depend>
+    <build_export_depend> geometry_msgs </build_export_depend>
+    <build_export_depend> sensor_msgs </build_export_depend>
+</package>
+
