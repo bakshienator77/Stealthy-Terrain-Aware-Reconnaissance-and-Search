@@ -20,7 +20,7 @@ bash init.sh
 ```
 cd zone_recon
 source devel/setup.bash
-USER=user ROS_LOG_DIR=/home/user/src/logging bash test_mysim.sh 100 star 5 4
+USER=user ROS_LOG_DIR=/home/user/src/zone_recon/logs bash test_mysim.sh 100 star 5 4
 ```
 - The syntax for the above command is `test_mysim.sh <runtime budget in seconds> <algorithm: star, rsi, guts, coverage, random> <number of targets> <number of agents: 1 2 4 or 8>`
 More detailed instructions to follow to recreate experiments.
