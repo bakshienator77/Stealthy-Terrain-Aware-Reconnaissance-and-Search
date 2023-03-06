@@ -2,10 +2,11 @@
 
 This repo has been anonymized.
 
-In order to run the repo run the dependencies are ROS melodic and python2.7 with numpy, matplotlib and PIL.
+In order to run the repo the dependencies are ROS melodic and python2.7 with numpy, matplotlib and PIL.
 
 To recreate the experiments or just run the algorithm you should use docker:
 - Install docker following this link: https://docs.docker.com/engine/install/
+- It is possible the above hyperlink has not rendered due to the anonymization process which disallows links. You can just google how to install docker and follow the official documentation.
 - Recommended OS is Ubuntu 18.04
 - Then run the following command to download the necessary image and start the container
 ```
