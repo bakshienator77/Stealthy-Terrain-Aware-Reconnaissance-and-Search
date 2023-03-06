@@ -2,6 +2,8 @@
 
 This repo has been anonymized.
 
+In order to download the repo, download the file `star.zip` ONLY. It contains this repo (minus the `star.zip` file itself of course)
+
 In order to run the repo the dependencies are ROS melodic and python2.7 with numpy, matplotlib and PIL.
 
 To recreate the experiments or just run the algorithm you should use docker:
