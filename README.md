@@ -2,6 +2,18 @@
 
 This repo has been anonymized.
 
+### Planning Time vs Search Region Area
+
+This section has been added for the benefit of the reviewers.
+
+![planning_time](./planning_time_vs_search_region_area.png)
+
+
+The planning time in search regions under a square km is around 10-15 secs.  At 2.5 km^2, it rises to over a minute. We would like to point out that in practice the robot can just start planning its next decision slightly before it expects to arrive at its next goal location so this planning time doesn't meaningfully impact search performance. This was an engineering detail which we didn't include because throughout the paper we evaluate the algorithms on their sample complexity rather than wall clock time. The compute on the robot is a Nuvo-8108GC with Intel Xeon E-2278GEL (Coffee Lake R) 2.0 GHz Processor - 35W.
+
+
+### Run the STAR algorithm and recreate ablation experiments
+
 In order to download the repo, download the file `star.zip` ONLY. It contains this repo (minus the `star.zip` file itself of course)
 
 In order to run the repo the dependencies are ROS melodic and python2.7 with numpy, matplotlib and PIL.
