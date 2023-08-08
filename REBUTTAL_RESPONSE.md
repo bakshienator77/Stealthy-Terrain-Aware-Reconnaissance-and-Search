@@ -156,8 +156,16 @@ They are not the same. Eqn 3 is how we evaluate model performance in our experim
 > Figures need to be modified and rearranged. Most of the captions and legends are too small to be viewed clearly.
 - We shall improve the ordering for clarity. The images are embedded in a lossless PDF and will be ditributed in an electronic form only, we encourage you to zoom in as necessary to see the figures.
 
+> As is stated in the review section, due to
+
+> Confusing setups and missing assumptions in the method section
+> Insufficient experiments to prove the claimed generalization capability
+> Limited interested to robot learning researchers
+> I suggest rejecting this paper before all the concerns are addressed.
 
 We would like to reiterate, we are grateful to the reviewer for taking the time and providing us with constructive feedback to improve the manuscript and it's clarity.
+
+
 
 
 # Reviewer Four: WR
