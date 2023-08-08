@@ -1,14 +1,12 @@
 # Meta comment
 Thank you for taking the time to review our paper. We shall briefly make our case for the relevance of this paper to CoRL and responding to specific questions by directly responding to the reviewer queries below.
 
-> Submissions will be evaluated based on the significance and novelty of the results, either theoretical or empirical. Results will be judged on the degree to which they have been objectively established and/or their potential for scientific and technological impact, as well as their relevance to robotic learning. Submissions should focus on a core robotics problem and demonstrate the relevance of proposed models, algorithms, datasets, and benchmarks to robotics. Authors are encouraged to report real-robot experiments or provide convincing evidence that simulation experiments are transferable to real robots.
-
-- We strongly encourage the reviewers to review our 3.5 min supplementary video that defines the problem, showcases our physical system, motivates the use of our realistic unity based simulation and depicts a full run of STAR in the simulator while explaining crucial steps in the algorithm.
+[make more evident that the results are simulation results but this algorithm is deployed on a real physical system]
+- We encourage the reviewers to review our 3.5 min supplementary video that defines the problem, showcases our physical system, motivates the use of our realistic unity based simulation and depicts a full run of STAR in the simulator while explaining crucial steps in the algorithm.
 - Our supplementary material also contains several engineering details such as average computation time, hardware used on the physical platforms, details on visibility map computation, etc. which the reviewers were curious about.
 - The novelty in this paper, lies in the algorithmic achievements, while the engineering on the physical platform was a feat in itself, we wanted this paper to fill the gap between theoretical research on adversarial search and realistic robotic search scenarios. 
 - Our algorithm is novel, runs on physical hardware, is inherently roboust to communication and hardware failures, and has been extensively ablated against varying team sizes, varying fidelity of communication, map type, and adversarial/non-adversarial targets. In all cases the STAR algorithm emerged superior on both sample complexity (efficiency of search decisions) and the stealth penalty (low-risk search)over existing baselines and state-of-the-art search methods [1-2]. 
 - The problem of (adversarial) search has long been studied in theoretical settings and even today most applications of robotics to search missions are through teleoperation. Multi-agent multi-target active search is NP-complete in the general case and therefore no optimal solutions exist [3-4]. We have provided our anonymized code base (linked in supplimentary material) and will make this publicly available upon acceptance of the paper so that we may encourage greater adoption of and research in fully autonomous robotic search. The code base is written in ROS and a more extensive version of it is exactly what we deploy on our physical systems.
-- On all points in the CoRL call for papers we believe we meet the threshold for relevance to the CoRL research community and we urge the reviewers to re-review this paper during the rebuttal period with fresh eyes.
 
 [1] Y. Ma, R. Garnett, and J. Schneider. Active search for sparse signals with region sensing.
 Proceedings of the AAAI Conference on Artificial Intelligence, 31(1), Feb. 2017
@@ -95,7 +93,7 @@ We are grateful to the reviewer for their comments. We hope we have addressed al
 ## Minor changes to manuscript
 
 ## Response
-We thank the reviewer for carefully reading the paper and providing constructive feedback. Here we will address your open questions and will update the manuscript accordingly as indicated. We would strongly encourage the reviewer to review our supplementary materials, especially the 3.5 min accompanying video, as it will provide a fundamental understanding of the paper to a first-time reader.
+We thank the reviewer for carefully reading the paper and providing constructive feedback. Here we will address your open questions and will update the manuscript accordingly as indicated. [Many of the clarifications are in our supplementary materials but we included them here again]. 
 
 > well I'm not an expert in the domain of multi-agent search. To me, it seems the ablation study should be conducted to see how much the prior helps the proposed problem. The reported ablation study over different map types, reliability of communications, number of search agents, and whether the targets are placed adversarially seems more like evaluating the proposed algorithm over other baselines in different settings. Please use appropriate words to describe the results.
 
@@ -103,7 +101,6 @@ We thank the reviewer for carefully reading the paper and providing constructive
 
 > Also, it is not clear to me what this paper's contribution is. If using the prior terrain information is novel, then has previous research used this information in other papers? If so, how is the proposed algorithm compared to those? If not, then the authors should state that this is the first time that terrain information is used for a stealthy target search algorithm.
 
-- Please do review our comment at the top of this page addressing the contributions of this paper and its relevance to to CoRL community.
 - The novel contribution of this paper is two-fold:
     - The problem formulation which uses realistic assumptions for large scale search operations, this includes robustness to intermittent communication, decentralized on board computation and realistic depth and terrain aware noise modelling.
     - The penalty term devised using the terrain prior in the multi objective optimisation. This stealth term informs search and evasion behaviour and is the key difference between STAR and GUTS [line 171]. Therefore in every ablation when STAR outperforms GUTS, it is evidence toward the vital contribution of the penalty term in improving search efficiency and reducing risk.
@@ -118,9 +115,7 @@ We are grateful to the reviewer for their time and effort in understanding our p
 
 ## Major changes to manuscript
 
-We thank the reviewer for carefully reading the paper and providing constructive feedback. Here we will address your open questions and will update the manuscript accordingly as indicated. We would strongly encourage the reviewer to review our supplementary materials, especially the 3.5 min accompanying video, as it will provide an understanding of the paper.
-
-Kindly do review our comment at the top of this page addressing the contributions of this paper and its relevance to to CoRL community.
+We thank the reviewer for carefully reading the paper and providing constructive feedback. Here we will address your open questions and will update the manuscript accordingly as indicated. [fill in]
 
 > Is the method correct? There are confusing setups and missing assumptions. For example, in Sec 3 beta  is defined to be vector of 0s and 1s (line 112), but then it is modeled with a zero-mean gaussian in Sec 4.1 (line 152).
 
@@ -131,12 +126,14 @@ You have correctly pointed out that the first reference is the definition and th
 - We also have experiments in Fig. 4 that ablate the performance of the system with and without the ability to communicate between agents. In either scenario STAR outperforms other methods and efficiency increases with increasing number of agents.
 
 > How generalizable is the method? In Sec 2, the paper argues that "... it is not clear if these RL methods will generalize to different topographies". However, the paper does not give results on different terrains either.
+[shorten]
 - Fig. 4 vs Fig. 5 has different topographies but no change to the algorithm other than providing a different prior. This shows the generalizability of our algorithm.
 - In the sentence just prior to the one quoted by the reviewer (Line 83) we also wrote that RL methods are extremely sample inefficient, that combined with overfitting on the terrain prior it was trained on makes RL impractical for time critical tasks like search and rescue where there is no time to train a model on the terrain prior before deploying the robots.
 - More generally speaking, our algorithm is appliable to any environment that could be mathematically thought of as a 2-D grid, regardless of type of terrain, number of agents, ability to coordinate and adversarial nature of the targets. We have outlined the limitations in Sec. 6.
 
 > How useful is this paper to robot learning researchers? In general, this paper can be presented as proposing a multi-agent exploration task in a grid world, and the stealthy search is one of the applications. A CoRL reader may expect more robot and real-world related components which are currently missing in the reviewer's opinion. For example, depending on the terrain, a vehicle may not be able to visit all the area and may turn over so that it loses mobility, will this affect agent's planning behavior? 
-- We would strongly encourage the reviewer to watch our 3.5 min supplementary video. We show our physical test platforms, explain the STAR algorithm and show a run in our realistic simulator.
+
+[areas the robot cannot traverse are marked by exclusion zone, for example in the video it is depicted as .... complete]
 - A vehicle failing due experiencing any kind of hardware failure is inherently handled by the system. Due to the parallelized thompson sampling framework, there is to explicit subdivision of the space and therefore if any of the robots becoms unavailable, the team as a whole will still complete the task. This has been demonstrated in Bakshi et. al. on physical systems [refernce], and Ghods et. al. in simulation [reference].
 
 > Lastly, I find the statement in the introduction "... Our motivation for only presenting simulation results in this paper is to ablate and assess the performance of the STAR algorithm ..." not convincing.
@@ -145,7 +142,9 @@ You have correctly pointed out that the first reference is the definition and th
 - To the best of our knowledge there is no algorithm in current literature that can outperform state-of-the-art methods regardless of adversarial/non-adversarial nature of targets, with or without communication, subject to different map types, regardless of number of agents, in large scale environments and that is designed with realistic considerations for viewshed computations, detector noise and actually runs on physical systems.
 - In the supplementary video we have provided we showcase our physical platform which is the basis for our ROS-Unity simulation experiments.
 - In the appendix you will find statistics from runs on the physical systems at the testing site similar to the one recreated in Unity, as well as other hardware specific and implementation specific details. 
-- In line 56, just prior to the statement quoted above by the reviewer we have encourage the reviewer to review the demo video showcasing the physical system.
+
+[compress this who section just to last bullet]
+
 - These are large-scale experiments on full size vehicles in outdoor environments, it is not possible to collect data in sufficient quantities to demonstrate statistically significant superiority of our algorithm against 4 other algorithms, varying the terrain, the number of agents, the availability of communications and the adversarial nature of the targets. Therefore we think our statement of presenting simulation results to 'ablate and assess the performance of the STAR' algorithm to be fair, whilst we are simultaneously providing a demo video and an appendix containing hardware related details and benchmarks.
 
 ## Minor changes to manuscript
