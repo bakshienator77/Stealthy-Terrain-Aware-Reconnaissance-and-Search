@@ -113,56 +113,54 @@ We are grateful to the reviewer for their time and effort in understanding our p
 
 ## Major changes to manuscript
 
-We thank the reviewer for carefully reading the paper and providing constructive feedback. Here we will address your open questions and will update the manuscript accordingly as indicated. [fill in]
+We thank the reviewer for carefully reading the paper and providing constructive feedback. In our meta comment above we have addressed the relevance of our paper at CoRL. Here we will address your open questions and will update the manuscript accordingly as indicated. 
 
 > Is the method correct? There are confusing setups and missing assumptions. For example, in Sec 3 beta  is defined to be vector of 0s and 1s (line 112), but then it is modeled with a zero-mean gaussian in Sec 4.1 (line 152).
 
-You have correctly pointed out that the first reference is the definition and the second is how it is being modelled/estimated on each robot. In the first mention of it in Sec 4.1 it has been referred to as $\beta$ instead of $\hat{\beta}$. We shall make the correction.
+The reviewer has correctly pointed out that the first reference (line 112) is the definition and the second (line 152) is how it is being modelled/estimated on each robot. The mention in L152 has been updated to $\hat{\beta}$ consistent with the rest of Sec 4.1.
 
-> As another example, the paper assumes decentralized control, but Eq (4) contains stacked measurements from all agents in Sec 4.1 (line 162) without stating when and how those agents exchange information. Both examples (and there are others) lead me to doubt the correctness of the method
-- The fifth bullet in the problem formulation (line 108) mentions that robot locations and observations will be communicated to each other when possible. Line 162 only mentions ‘stacking all measurements from $(X_t, y_t)$ in $D_t^j$’. In the very next sentence Line 164 it is written: ‘Each robot estimates $p(\beta/D^j_t)$ on-board using its partial dataset $D^j_t$’. If the robot only has access to its own measurements, it will stack those, if it has received communications from other robots, it will stack those too. It is clearly a decentralized setup. 
+> As another example, the paper assumes decentralized control, but Eq (4) contains stacked measurements from all agents in Sec 4.1 (line 162) without stating when and how those agents exchange information.
+
+- (line 108) The fifth bullet in the problem formulation mentions that robot locations and observations will be communicated to each other when possible. Line 162 only mentions ‘stacking all measurements from $(X_t, y_t)$ in $D_t^j$’. In the very next sentence (Line 164) we clarify: ‘Each robot estimates $p(\beta/D^j_t)$ on-board using its partial dataset $D^j_t$’. If the robot only has access to its own measurements, it will stack those, if it has received communications from other robots, it will stack those too. It is clearly a decentralized setup. 
 - We also have experiments in Fig. 4 that ablate the performance of the system with and without the ability to communicate between agents. In either scenario STAR outperforms other methods and efficiency increases with increasing number of agents.
 
-> How generalizable is the method? In Sec 2, the paper argues that "... it is not clear if these RL methods will generalize to different topographies". However, the paper does not give results on different terrains either.
-[shorten]
-- Fig. 4 vs Fig. 5 has different topographies but no change to the algorithm other than providing a different prior. This shows the generalizability of our algorithm.
-- In the sentence just prior to the one quoted by the reviewer (Line 83) we also wrote that RL methods are extremely sample inefficient, that combined with overfitting on the terrain prior it was trained on makes RL impractical for time critical tasks like search and rescue where there is no time to train a model on the terrain prior before deploying the robots.
-- More generally speaking, our algorithm is appliable to any environment that could be mathematically thought of as a 2-D grid, regardless of type of terrain, number of agents, ability to coordinate and adversarial nature of the targets. We have outlined the limitations in Sec. 6.
+> How generalizable is the method? In Sec 2, the paper argues that "... it is not clear if these RL methods will generalize to different topographies" (L84). However, the paper does not give results on different terrains either.
+- Fig. 4(c,d) vs Fig. 5(a-h) has different topographies but no change to the algorithm other than providing a different prior. This shows the generalizability of our algorithm.
+- In Line 83 we write that RL methods are extremely sample inefficient before making the quoted statement. We can add the clarification that sample inefficiency combined with overfitting on the terrain prior makes RL impractical for time critical tasks like search and rescue where there is no time to re-train a model on a new terrain prior before deploying on the robots and commencing a mission.
 
 > How useful is this paper to robot learning researchers? In general, this paper can be presented as proposing a multi-agent exploration task in a grid world, and the stealthy search is one of the applications. A CoRL reader may expect more robot and real-world related components which are currently missing in the reviewer's opinion. For example, depending on the terrain, a vehicle may not be able to visit all the area and may turn over so that it loses mobility, will this affect agent's planning behavior? 
 
-[areas the robot cannot traverse are marked by exclusion zone, for example in the video it is depicted as .... complete]
-- A vehicle failing due experiencing any kind of hardware failure is inherently handled by the system. Due to the parallelized thompson sampling framework, there is to explicit subdivision of the space and therefore if any of the robots becoms unavailable, the team as a whole will still complete the task. This has been demonstrated in Bakshi et. al. on physical systems [refernce], and Ghods et. al. in simulation [reference].
+- Areas the robot cannot traverse are marked by exclusion zones, for example in the supplementary video and in Fig. 1-c, non-traversable regions are marked in magenta.
+- A hardware failure of any robot (such as going offline, overturning) is inherently handled by the system. Due to the parallelized thompson sampling framework, there is no explicit subdivision of the space and therefore if any of the robots become unavailable, the team as a whole will still complete the task. This has been demonstrated in [1] on physical systems, and [2] in simulation.
+
+[1] N. A. Bakshi, T. Gupta, R. Ghods, and J. Schneider. Guts: Generalized uncertainty-aware
+thompson sampling for multi-agent active search. In IEEE International Conference on
+Robotics and Automation (ICRA), 2023
+
+[2] R. Ghods, W. J. Durkin, and J. Schneider. Multi-Agent active search using realistic Depth-
+Aware noise model. CoRR, abs/2011.04825, 2020.
 
 > Lastly, I find the statement in the introduction "... Our motivation for only presenting simulation results in this paper is to ablate and assess the performance of the STAR algorithm ..." not convincing.
 
-- The novelty in this paper lies in the algorithm not in the engineering of the physical test platforms, due to limitations in space we chose to focus on a well-ablated empirical study of the superiority of the algorithm in a realistic simulator.
-- To the best of our knowledge there is no algorithm in current literature that can outperform state-of-the-art methods regardless of adversarial/non-adversarial nature of targets, with or without communication, subject to different map types, regardless of number of agents, in large scale environments and that is designed with realistic considerations for viewshed computations, detector noise and actually runs on physical systems.
-- In the supplementary video we have provided we showcase our physical platform which is the basis for our ROS-Unity simulation experiments.
-- In the appendix you will find statistics from runs on the physical systems at the testing site similar to the one recreated in Unity, as well as other hardware specific and implementation specific details. 
-
-[compress this who section just to last bullet]
-
-- These are large-scale experiments on full size vehicles in outdoor environments, it is not possible to collect data in sufficient quantities to demonstrate statistically significant superiority of our algorithm against 4 other algorithms, varying the terrain, the number of agents, the availability of communications and the adversarial nature of the targets. Therefore we think our statement of presenting simulation results to 'ablate and assess the performance of the STAR' algorithm to be fair, whilst we are simultaneously providing a demo video and an appendix containing hardware related details and benchmarks.
+- These are large-scale experiments on full size vehicles in outdoor environments, it is not possible to collect data in sufficient quantities to demonstrate statistically significant superiority of our algorithm against 4 other algorithms, varying the terrain, the number of agents, the availability of communications and the adversarial nature of the targets. Therefore we think our statement of presenting simulation results to 'ablate and assess the performance of the STAR algorithm' is fair, whilst simultaneously providing a demo video and an appendix containing system related details.
 
 ## Minor changes to manuscript
 > The paper uses a large number of notations and equations that are cluttered and redundant. E.g., Eq (3) and Eq (8) are the same thing.
 
-They are not the same. Eqn 3 is how we evaluate model performance in our experiments and it assumes ground truth knowledge of target locations. Eqn (8) is the stealth penalty from a robots perspective where a posterior over the robot locations (Eqn. 7) informs the stealth penalty for decision making. Both these equations are necessary for understanding the algorithm and it's evaluation in the graphs in Fig.4 and Fig. 5.
+They are not the same. Eqn 3 is how we evaluate model performance in our experiments and it assumes ground truth knowledge of target locations. Eqn. 8 is the stealth penalty from a robot's perspective where a posterior over the robot locations (Eqn. 7) informs the stealth penalty for decision making. Both these equations are necessary for understanding the algorithm and it's evaluation in the graphs in Fig.4 and Fig. 5.
 
 > Figures need to be modified and rearranged. Most of the captions and legends are too small to be viewed clearly.
-- We shall improve the ordering for clarity. The images are embedded in a lossless PDF and will be ditributed in an electronic form only, we encourage you to zoom in as necessary to see the figures.
+- We shall improve the ordering and sizing for clarity.
 
 > As is stated in the review section, due to
 
-> Confusing setups and missing assumptions in the method section
-> Insufficient experiments to prove the claimed generalization capability
-> Limited interested to robot learning researchers
+> 1. Confusing setups and missing assumptions in the method section
+> 2. Insufficient experiments to prove the claimed generalization capability
+> 3. Limited interested to robot learning researchers
+
 > I suggest rejecting this paper before all the concerns are addressed.
 
-We would like to reiterate, we are grateful to the reviewer for taking the time and providing us with constructive feedback to improve the manuscript and it's clarity.
-
-
+We are grateful to the reviewer for taking the time and providing us with constructive feedback to improve the manuscript and it's clarity. We hope that after reviewing the video, our meta comment at the top of this page and our above response, we have clarified all open questions in the reviewer's mind.
 
 
 # Reviewer Four: WR
