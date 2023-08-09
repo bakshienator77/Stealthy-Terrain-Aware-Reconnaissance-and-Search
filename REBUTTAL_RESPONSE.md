@@ -94,22 +94,19 @@ We are grateful to the reviewer for their time and consideration. We hope we hav
 ## Minor changes to manuscript
 
 ## Response
-We thank the reviewer for carefully reading the paper and providing constructive feedback. Here we will address your open questions and will update the manuscript accordingly as indicated. [Many of the clarifications are in our supplementary materials but we included them here again]. 
+We thank the reviewer for carefully reading the paper and providing constructive feedback. 
 
-> well I'm not an expert in the domain of multi-agent search. To me, it seems the ablation study should be conducted to see how much the prior helps the proposed problem. The reported ablation study over different map types, reliability of communications, number of search agents, and whether the targets are placed adversarially seems more like evaluating the proposed algorithm over other baselines in different settings. Please use appropriate words to describe the results.
-
-[ADD DETAILS TO RESULTS AND EXPERIMENTS]
-
-> Also, it is not clear to me what this paper's contribution is. If using the prior terrain information is novel, then has previous research used this information in other papers? If so, how is the proposed algorithm compared to those? If not, then the authors should state that this is the first time that terrain information is used for a stealthy target search algorithm.
+> What is the contribution of this paper compared to existing work?
 
 - The novel contribution of this paper is two-fold:
-    - The problem formulation which uses realistic assumptions for large scale search operations, this includes robustness to intermittent communication, decentralized on board computation and realistic depth and terrain aware noise modelling.
-    - The penalty term devised using the terrain prior in the multi objective optimisation. This stealth term informs search and evasion behaviour and is the key difference between STAR and GUTS [line 171]. Therefore in every ablation when STAR outperforms GUTS, it is evidence toward the vital contribution of the penalty term in improving search efficiency and reducing risk.
+    - The problem formulation, which uses realistic assumptions for large scale search operations, this includes robustness to intermittent communication, decentralized on board computation and realistic depth and terrain aware noise modelling.
+    - The penalty term devised using the terrain prior in the multi objective optimisation. This stealth term informs search and evasion behaviour and is the key difference between STAR and GUTS [line 171]. Therefore in every ablation when STAR outperforms GUTS, it is evidence toward the vital contribution of the penalty term in improving search efficiency and reducing risk [line 260].
+    - STAR algorithm is designed to run on physical hardware and has been deployed for search and reconnaissance experiments.
 
 
 > Again, I'm not an expert in this domain. My recommendation is based on my limited understanding of this paper and the existing work.
 
-We are grateful to the reviewer for their time and effort in understanding our paper. We hope that after reviewing the video, our meta comment at the top of this page and our above responses we have clarified all open questions in the reviewer's mind.
+We are grateful to the reviewer for their time and effort in understanding our paper. We hope that after reviewing the video, our meta comment at the top of this page and our above response, we have clarified all open questions in the reviewer's mind.
 
 # Reviewer Three: SR
 ## Experiments requested
