@@ -33,57 +33,57 @@ pages NA–NA, 2010
 
 ## Response
 
-We thank the reviewer for carefully reading the paper and providing constructive feedback. Here we will address your open questions and will update the manuscript accordingly as indicated. We would encourage the reviewer to review our supplementary materials as many of the clarifications may be found there.
+We thank the reviewer for carefully reading the paper and providing constructive feedback. Here we will address your open questions and will update the manuscript accordingly as indicated. 
 
-## Notational/Math Questions
+### Notational/Math Questions
 
 > Notation is at times ambiguous. The sensing matrix for target and robots use the same symbol while the subscript has different meaning in the two settings. The subscript represents time in one instance, and a target index in the other. See equation (8) as an example. 
 
-Thanks for pointing this out, it should be in superscript here. We have made the correction.
-> -In Sec.3, can a component of vector v_t be zero? If it does, then it would lead to division by zero in equation (2).
+Thanks for pointing this out, it should be in superscript when referring to agents/targets. We have made the correction.
+> -In Sec.3, can a component of vector $v_t$ be zero? If it does, then it would lead to division by zero in equation (2).
 
-The physical interpretation of an entry of v_t being zero is that the cell is completely obstructed/invisible to the robot (See Fig. 2-a). Such entries are simply omitted, i.e. no observation is added for them as they are not viewable. The undefined case does not occur.
+The physical interpretation of an entry of v_t being zero is that the cell is completely obstructed/invisible to the robot (See Fig. 2-a). Such entries are simply omitted, i.e. no observation is added for them as they are not viewable. Hence, the undefined case does not occur.
 
 > It is unclear if agents know the targets’ sensing matrices. In case they do not, then how the visibility objective in equation (8) is computed. The approach only samples the targets’ locations. Does it also sample the targets’ sensing matrices?
 
-The robots assume target sensing matrix is depicted in Fig. 2-b. More details have been provided in Sec. 7.5 and Sec 7.6 in the supplementary material provided. 
+The robots assume target sensing matrices are as depicted in Fig. 2-b. This is an omnidirectional version of the robot's own sensing matrix subject only to the terrain but not to noise. More details have been provided in Sec. 7.5 and Sec 7.6 in the supplementary material. 
 
 
-## Engineering/Physical system questions
+### Engineering/Physical system questions
 
-We wanted to present an algorithm-forward paper where the reader can think of the merits of the algorithm and apply it to their own multi-robot system. To this end the main paper was designed to focus on algorithmic details, experiments and performance, and the accompanying video and appendix covered details specific to the physical system. That being said, please find responses to your questions below.
+We wanted to present an algorithm-forward paper where the reader can think of the merits of the algorithm and apply it to their own multi-robot system. To this end the main paper was designed to focus on algorithmic details, experiments and performance. The accompanying video and appendix covered details specific to the physical system. Please find responses to your specific questions below.
 
 > It is not clear how agent motion constraints are captured by the model. The agents’ motion model is not even described.
 
-In the supplementary material a video of the real hardware platform and a full run in our realistic simulation environment are provided. The vehicles have an Ackerman drive and are modelled as such in the realistic simulator. The movement model is greatly simplified in the simple simulator. Planning is described in Sec 7.6 in the supplementary materials.
+In the supplementary video we show the real hardware platform and a full run in our realistic simulation environment. The vehicles have an Ackerman drive and are modelled as such in the realistic simulator. The movement model/physics are greatly simplified in the simple simulator. Planning is described in Sec 7.6 in the supplementary materials.
 
 > Is the computational effort growing over time for the EM and action selection procedures?
 
-Yes and no. The computational time is polynomial in the size of the search space (number of columns in X) or the number of observations (number of rows in X). The code picks whichever is lower. So initially the time does increase while the number of observations increases to match the search space but it is constant after that. Therefore we thinking of it as constant: bounded by the size of the search space. The next section will further clarify.
+No. The computational time is polynomial in the size of the search space (number of columns in X from Eqn. 4). Therefore we think of it as constant for a given search region. The next section will further clarify.
 
 > What is the runtime performance of the algorithms per agent action? 
 
-In the supplementary material we have provided a characteristic curve on real hardware to show computation time against size of the search space (directly related to the number of columns in X). But as explained in line 412-414 in Sec. 7.2 in the supplementary material this doesn’t impact real world search performance as the robot may simply start computing the next action when it is a minute or so away from it's current goal. 
+In the supplementary material we have provided a characteristic curve on real hardware to show computation time against size of the search space. But, as explained in line 412-414 in Sec. 7.2 in the supplementary material, this doesn’t impact real world search performance as the robot may simply start computing the next action a requisite amount of time away from it's current goal. 
 
 > How does the communication impact performance as a function of update frequency (number of received packages from other agents per time unit)?
 
-There is a fixed buffer to the incoming messages so it does not affect computation speed. This can be verified in the anonymized code link provided in Sec. 7.1 of the supplementary material.
+Search is asynchronous, receiving a message from another robot does not make the receiver stop its current action and re-plan. This is crucial if communication is unreliable. Incoming messages are appropriately cached and decision making is done when a robot has completed its last action, using the all information it observed and messages it has received until that point in time. There is a fixed length buffer preventing any degradation of performance due to the caching callbacks triggered upon message receipt. Our anonymized code link is provided in Sec. 7.1 of the supplementary material. Message frequency clarifications to follow.
 
 > In the communication model, do agents swap raw observation data? Are data packages sufficiently small for the approach to be practical?
 
-In line 108-110 in the main paper we define that, in our communication model, agents share their location with each other (high frequency) and positive observations whenever new one is made (low frequency) if communication is feasible. The network easily handles the traffic as there is no sharing of posteriors/planned paths.
+In line 108-110 in the main paper we define that, if communication is feasible, agents share their location with each other (high frequency) and (positive) observations whenever new one is made (low frequency). The network easily handles the traffic as there is no sharing of posteriors/planned paths.
 
 > Why is the runtime budget 1 hour and 15 minutes?
 
-4 sq. km is a large space and the robots have a max speed of 5 m/s. The budget needed to be longer enough that robots can actually search the space and short enough that this algorithm could be adopted in a real-world search and rescue or reconnaissance missions. This clarification was in the main text but was cut due to space restrictions. We shall add it back.
+2.5 sq. km is a large space and the robots have a max speed of 5 m/s. The budget is selected such that it is long enough that robots may explore the space and short enough that this algorithm could be adopted in a real-world search and rescue or reconnaissance missions. This clarification was in the main text but was cut due to space restrictions. We shall add it back.
 
 > It is unclear from the last sentence if zero-risk search is possible using the proposed method.
 
- In the current formulation with symmetric sensing, zero-risk or zero-penalty search is impossible, however in the asymmetric case, it can be possible. Please refer to Sec. 7.6 in the supplementary material for more details.
+ In the current formulation with symmetric sensing, zero-risk or zero-penalty search is impossible, however in the asymmetric case, it can be possible. Please refer to Sec. 7.6 in the supplementary material for more details. We shall also clarify this in the limitations section.
 
 >The paper considers an important and interesting problem in robotics. It presents a practical approach in the form of a decentralized active exploration method. The paper requires clarification of several technical aspects and improve notation for clarity.
 
-We are grateful to the reviewer for their comments. We hope we have addressed all outstanding points and welcome further feedback if any questions remain open.
+We are grateful to the reviewer for their time and consideration. We hope we have addressed all outstanding points and welcome further feedback if any questions remain open.
 
 
 # Reviewer Two: WR
