@@ -166,42 +166,23 @@ We are grateful to the reviewer for taking the time and providing us with constr
 # Reviewer Four: WR
 ## Experiments requested
 
-## Major changes to manuscript
 
-## Minor changes to manuscript
-> (i) Although the number of targets is unknown a priori, it seems that the algorithm needs (i-a) a prior on the targets' location, and (i-b) knowledge of their sensing matrix. I would discuss in the paper how (i-a) and (i-b) can be obtained.
-- No prior is needed, as stated in section 4.1, a zero mean gaussian prior is assumed for each possible grid location and sparsity is enforced using a conjugate inverse gamma prior. The inverse gamma prior is responsible for dynamically setting some variances of the gaussian priors in the grid to well-above zero. The exact number of non-zero entries is learned online based on observations, therefore our method is robust to not having an informative prior over target locations AND not having a prior on the number of targets either.
-- Yes the sensing matrix is assumed to be an omnidirectional version of a robots own sensing capability (Fig. 2) and it is hence symmetric. In Sec. 7.4-7.6 of the appendix you will find more information on this. 
-> Also, I would discuss these assumptions in the introduction and in the problem formulation to help guide the reader on what the problem and its limitations are.
-- [Don't take GUTS constraints for granted]
-- [TODO]
+## Response
 
->(ii) To my understanding, the algorithm also needs a topological map that quantifies the risk for the robots to be visible from a target. Similarly to the previous comment, I would explain how such a map can be obtained when the targets are unknown a priori.
-- This is defined based on the current posterior $\hat{\beta}$ in Sec. 4.2, Lines 183-186: "However, we don't know the ground truth locations of the targets, we only have the posterior $\hat{\beta}$. We use the folded normal distribution to determine a separate posterior mean $\hat{\mu}_{vis} \in \mathbb{R}^M$ for visibility risk that accounts for the mean and variance of the posterior $\hat{\beta}$ as defined in Eqn. 7 and the penalty function is defined in Eqn. 8"
-- The intuition for this choice is explained in Line 190-194: "In Eqn. 8, $\hat{\mu}^i_{vis}$ behaves as a weighting scalar for each location $i$ in the map where a threat may be located. When the posterior variance for a location $i$ is close to zero then $\hat{\mu}^i_{vis}$ will tend to the posterior mean $\mu^i$, and when the variance is high but the mean is zero (as it is at the beginning of the run) the weighting factor will still be non-zero as it will be governed by the variance."
-> I would define some used terms/notions:
+Thank you for taking the time to review our paper and providing such detailed constructive feedback. Here we will address your open questions and will update the manuscript accordingly as indicated. 
 
-> (i) I would elaborate on what "information leakage" means.
-
-Information leakage from the paper’s perspective has been defined as the stealth penalty. More generally, it is when an attacker 
-
-> (ii) In eq. (1), I would define what the clip operator does immediately after eq. (1).
-- We have moved its explanation from line 128 closer to Eqn. 1.
-
-> (iii) I would define what a "one-hot vector" is.
-
-> (iv) I would define what "recall" means in Figure 6.
-
-
+### Design Choices
 > I would elaborate on design choices, to help the reader understand the practicality and potential impact of the algorithm:
 
 > (i) I would explain why the observation model is clipped to be between 0 and 1.
-- Per the definition of $\beta$ (Line 112) observations must be in the range, the equation to which you are referring is Line 114, the relation is implicit. The additive noise can violate these bounds hence the clipping is necessary.
+- Per the definition of $\beta$ (Line 112) observations must be in the range. We have moved its explanation from line 128 closer to Eqn. 1 and it now reads: "The observation $y_t$ is clipped to be within 0 and 1 as the additive noise can cause the resultant quantity to exceed those bounds"
 
-> (ii) I would discuss what is the intuition behind the reward in eq. (6).
-- [TODO]
+
 > (iii) I would discuss under what assumptions there are performance guarantees.
-- 
+- As discussed in the related work (Sec. 2, L65-79), theoretical guarantees exist for algorithms that optimise for the worst case evader, but these are not applicable to real world problems. Optimality can be discussed for a probabilistic approach such as STAR however, beyond the single evader single pursuer case no solution exists as the problem is NP-complete [1-2] in a bayesian setting. Game theory is a natural setting for multiplayer mini-max games [3-4] however without knowledge of the number of players in the game, no optimal solutions can be found.
+- Therefore, in absence of theoretical guarantees we performed an empirical ablation study of STAR vs state-of-the-art algorithms like GUTS and RSI.
+
+### Related Work
 
 >I would discuss in more detail the differences of this work from existing works, in particular [27, 28, 29]. In lines 87-89, the comparison is through the statement "However, these approaches focus on path planning but not on a competing search objective." I understand from this that the difference between [27, 28, 29] and this paper is that this paper uses a different objective function. I would present the comparison from a more qualitative perspective: Will the algorithms in [27, 28, 29] not perform well in the proposed setting in this paper, and why? In what scenarios they will not be able to be applied but the proposed algorithm will be?
 - [27, 28, 29] attempt to solve path planning with adveraries. The goal is to avoid known targets but not to seek them. It is a single objective problem. 
@@ -209,11 +190,76 @@ Information leakage from the paper’s perspective has been defined as the steal
 - We have amended lines 87-89 to now read as follows: "Terrain-aware path planning with adversarial targets is well-studied in the context of military operations [27, 28, 29] and in the context of stealth-based video games [30, 31]. However, these approaches focus on path planning but not on a competing search objective, that is, they assume that
 the adversary locations are known and need to be avoided, or are unknown but need to be evaded if encountered en route to the goal."
 
+
+
+[1] Richard Borie, Craig Tovey, and Sven Koenig. Algo-
+rithms and complexity results for pursuit-evasion prob-
+lems. In Proceedings of the 21st International Joint
+Conference on Artificial Intelligence, IJCAI’09, page
+59–66, San Francisco, CA, USA, 2009. Morgan Kauf-
+mann Publishers Inc.
+
+[2] Hiroyuki Sato and Johannes O Royset. Path optimization
+for the resource-constrained searcher. Nav. Res. Logist.,
+pages NA–NA, 2010
+
+[3] Z. Zhang and P. Tokekar. Tree search techniques for adversarial target tracking with distance dependent measurement noise. IEEE Trans. Control Syst. Technol., 30(2):712–727, 2022.338
+
+[4] T. Bas ̧ar and G. J. Olsder. Dynamic Noncooperative Game Theory, 2nd Edition. Society for Industrial and Applied Mathematics, 1998
+
+[27] A. Teng, D. DeMenthon, and L. Davis. Stealth terrain navigation. Systems, Man and Cyber-
+netics, IEEE Transactions on, 23:96 – 110, 02 1993. doi:10.1109/21.214770.
+
+[28] A. Tews, G. Sukhatme, and M. Mataric. A multi-robot approach to stealthy navigation in the
+presence of an observer. In IEEE International Conference on Robotics and Automation, 2004.
+Proceedings. ICRA ’04. 2004, volume 3, pages 2379–2385 Vol.3, 2004. doi:10.1109/ROBOT.
+2004.1307417.
+
+[29] B. McCue and National Defense University Press. U-boats in the bay of Biscay: An essay in
+operations analysis. National Defense University Press, 1990.
+
+### Assumptions
+
+> (i) Although the number of targets is unknown a priori, it seems that the algorithm needs (i-a) a prior on the targets' location, and (i-b) knowledge of their sensing matrix. I would discuss in the paper how (i-a) and (i-b) can be obtained.
+- No prior is needed, as stated in section 4.1, a zero mean gaussian prior is assumed for each possible grid location and sparsity is enforced using a conjugate inverse gamma prior. The inverse gamma prior is responsible for dynamically setting some variances of the gaussian priors in the grid to well-above zero [L155-157]. The exact number of non-zero entries is observations during the experiment, therefore our method is robust to not having an informative prior over target locations AND not having a prior on the number of targets either.
+- Yes the sensing matrix is assumed to be an omnidirectional version of a robots own sensing capability (Fig. 2-b). This is a practical assumption given that sensing capabilities of an adversary won't be known apriori in the real-world. In Sec. 7.4-7.6 of the appendix you will find more information on this. 
+
+
+>(ii) To my understanding, the algorithm also needs a topological map that quantifies the risk for the robots to be visible from a target. Similarly to the previous comment, I would explain how such a map can be obtained when the targets are unknown a priori.
+- This is defined based on the current posterior $\hat{\beta}$ in Sec. 4.2, Lines 183-186: "However, we don't know the ground truth locations of the targets, we only have the posterior $\hat{\beta}$. We use the folded normal distribution to determine a separate posterior mean $\hat{\mu}_{vis} \in \mathbb{R}^M$ for visibility risk that accounts for the mean and variance of the posterior $\hat{\beta}$ as defined in Eqn. 7 and the penalty function is defined in Eqn. 8"
+- The intuition for this choice is explained in Line 190-194: "In Eqn. 8, $\hat{\mu}^i_{vis}$ behaves as a weighting scalar for each location $i$ in the map where a threat may be located. When the posterior variance for a location $i$ is close to zero then $\hat{\mu}^i_{vis}$ will tend to the posterior mean $\mu^i$, and when the variance is high but the mean is zero (as it is at the beginning of the run) the weighting factor will still be non-zero as it will be governed by the variance."
+
+### Definitions
+> I would define some used terms/notions:
+
+> (i) I would elaborate on what "information leakage" means.
+
+Information leakage from the paper’s perspective has been defined as the stealth penalty. But we can understand how this may be confused with information leakage in information theory. We shall amend information leakage to 'visibility risk'. 
+
+> (ii) In eq. (1), I would define what the clip operator does immediately after eq. (1).
+- We have moved its explanation from line 128 closer to Eqn. 1 and it now reads: "The observation $y_t$ is clipped to be within 0 and 1 as the additive noise can cause the resultant quantity to exceed those bounds"
+
+> (iii) I would define what a "one-hot vector" is.
+
+We shall do so. "A vector that sums to one and has all but one element as zero."
+> (iv) I would define what "recall" means in Figure 6.
+
+It is the fraction of targets located. We shall clarify the same in the figure caption/results.
+
+
+
+
+## Major changes to manuscript
+
+> (ii) I would discuss what is the intuition behind the reward in eq. (6).
+
+> Also, I would discuss these assumptions in the introduction and in the problem formulation to help guide the reader on what the problem and its limitations are.
+
+These two are excellent points you have raised. To incorporate your feedback we will rewrite certain sections of the manuscript and respond to you in the coming days.
+
 > The paper proposes an excellent problem and a method that appears promising. In my opinion, the current version of the paper would benefit from discussing the practicality of the assumptions and from elaborating on the rigorous performance of the proposed algorithm given the design choices.
 
 We are grateful to the excellent constructive feedback provided by the reviewer to improve the clarity of our paper. We hope that the changes proposed and clarifications provided above have addressed all open questions in the reviewer's mind.
-
-
 
 TODO:
 1. Correct Fig. 4-d ka y axis
