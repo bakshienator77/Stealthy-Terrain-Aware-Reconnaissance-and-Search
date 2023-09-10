@@ -1,10 +1,6 @@
-## Anonymous Repo for Stealthy Terrain-Aware Multi-Agent Active Search
-
-This repo has been anonymized.
+## Repo for Stealthy Terrain-Aware Multi-Agent Active Search
 
 ### Planning Time vs Search Region Area
-
-This section has been added for the benefit of the reviewers.
 
 ![planning_time](./planning_time_vs_search_region_area.png)
 
@@ -14,13 +10,10 @@ The planning time in search regions under a square km is around 10-15 secs.  At 
 
 ### Run the STAR algorithm and recreate ablation experiments
 
-In order to download the repo, download the file `star.zip` ONLY. It contains this repo (minus the `star.zip` file itself of course)
-
 In order to run the repo the dependencies are ROS melodic and python2.7 with numpy, matplotlib and PIL.
 
 To recreate the experiments or just run the algorithm you should use docker:
 - Install docker following this link: https://docs.docker.com/engine/install/
-- It is possible the above hyperlink has not rendered due to the anonymization process which disallows links. You can just google how to install docker and follow the official documentation.
 - Recommended OS is Ubuntu 18.04
 - Then run the following command to download the necessary image and start the container
 ```
