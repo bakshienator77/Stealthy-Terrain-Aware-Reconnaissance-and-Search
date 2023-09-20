@@ -1,5 +1,22 @@
 ## Repo for Stealthy Terrain-Aware Multi-Agent Active Search
 
+Unofficial name: STAR this if you have GUTS
+
+Published in Conference on Robot Learning (CoRL) 2023
+
+```
+
+@inproceedings{
+bakshi2023stealthy,
+title={Stealthy Terrain-Aware Multi-Agent Active Search},
+author={Nikhil Angad Bakshi and Jeff Schneider},
+booktitle={7th Annual Conference on Robot Learning},
+year={2023},
+url={https://openreview.net/forum?id=eE3fsO5Mi2}
+}
+
+```
+
 ### Planning Time vs Search Region Area
 
 ![planning_time](./planning_time_vs_search_region_area.png)
