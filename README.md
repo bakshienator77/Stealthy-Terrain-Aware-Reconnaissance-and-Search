@@ -48,3 +48,21 @@ More detailed instructions to follow to recreate experiments.
 - Feel free to try any of combinations. The runs can be seen in the logging folder such that every robot has logs (replicating the real life system).
 - The results for the paper were generated using the `experiments{_multi,_simplesim}.sh` scripts and they take several days for realistic simulations and several hours for the simplified simulator.
 - The main code for STAR, GUTS, RSI, COVERAGE and RANDOM policies tested for adversarial multi agent active search in this paper can be found written in src/zone_recon/src/waypoint_planner/src/waypoint_planner/active_search.py.
+
+
+### License
+
+N. A. Bakshi and J. Schneider are with the Robotics Institute, School of Computer Science, Carnegie Mellon University, Pittsburgh, PA 15213
+
+(c) Nikhil Angad Bakshi 2023 (nabakshi@cs.cmu.edu)
+
+Please cite the following paper to use the code:
+
+@inproceedings{
+bakshi2023stealthy,
+title={Stealthy Terrain-Aware Multi-Agent Active Search},
+author={Nikhil Angad Bakshi and Jeff Schneider},
+booktitle={7th Annual Conference on Robot Learning},
+year={2023},
+url={https://openreview.net/forum?id=eE3fsO5Mi2}
+}
