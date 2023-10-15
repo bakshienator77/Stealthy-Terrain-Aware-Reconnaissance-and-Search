@@ -1,3 +1,23 @@
+"""
+Code for the work:
+
+`` Stealthy Terrain-Aware Multi-Agent Active Search``,
+Nikhil Angad Bakshi and Jeff Schneider
+Robotics Institute, Carnegie Mellon University
+
+(C) Nikhil Angad Bakshi 2023 (nabakshi@cs.cmu.edu)
+Please cite the following paper to use the code:
+
+
+@inproceedings{
+bakshi2023stealthy,
+title={Stealthy Terrain-Aware Multi-Agent Active Search},
+author={Nikhil Angad Bakshi and Jeff Schneider},
+booktitle={7th Annual Conference on Robot Learning},
+year={2023},
+url={https://openreview.net/forum?id=eE3fsO5Mi2}
+}
+"""
 #!/usr/bin/env python
 
 
