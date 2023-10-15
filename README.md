@@ -2,9 +2,10 @@
 
 Unofficial name: STAR this if you have GUTS
 
-Example of a Target being Detected | Overhead View of the Scene on the left | Still showing scale of fullsize vehicles and massive landscape
-:--------------:|:----------------:|:-----------:
-<img src="./target-detection-example.gif" alt="Target detection" height="" width="250"/> | <img src="./map-example.gif" alt="map example" width="250" height=""/> | <img src="./desert_mountainous_with_recbot.png" alt="desert mountainous"  width="400px" height=""/>
+Example of a Target being Detected | Desert mountainous Search Region
+:-----------------------------:|:-----------:
+<img src="./target-detection-example.gif" alt="Target detection" height="" width="250"/> <img src="./map-example.gif" alt="map example" width="250" height=""/> | <img src="./desert_mountainous_with_recbot.png" alt="desert mountainous"  width="400px" height=""/>
+Overhead View of the Scene on top |   The fullsize robots pictured in the massive region
 
 A known terrain map informs stealthy behaviour such as moving through regions of greater concealment (for eg. between/close around mountains) as well as efficient search behaviours such as searching in better hiding places.
 
