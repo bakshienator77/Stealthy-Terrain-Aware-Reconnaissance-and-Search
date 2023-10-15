@@ -1,6 +1,6 @@
 ## Repo for Stealthy Terrain-Aware Multi-Agent Active Search
 
-Unofficial name: STAR this if you have GUTS
+Unofficial name: S.T.A.R. this if you have G.U.T.S.
 
 Example of a Target being Detected | Desert mountainous Search Region
 :-----------------------------:|:-----------:
