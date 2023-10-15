@@ -2,6 +2,10 @@
 
 Unofficial name: STAR this if you have GUTS
 
+Example of a Target being Detected | Overhead View of the Scene on the left | Still showing scale of fullsize vehicles and massive landscape
+:-------------------------:|:----------------------------:|:----------------------:
+<img src="./target-detection-example.gif" alt="Target detection" width="1400"/> | <img src="./map-example.gif" alt="map example" width="1400"/> | ![desert_mountainous_with_recbot.png](./desert_mountainous_with_recbot.png)
+
 Published in Conference on Robot Learning (CoRL) 2023
 
 ```
@@ -16,14 +20,6 @@ url={https://openreview.net/forum?id=eE3fsO5Mi2}
 }
 
 ```
-
-### Planning Time vs Search Region Area
-
-![planning_time](./planning_time_vs_search_region_area.png)
-
-
-The planning time in search regions under a square km is around 10-15 secs.  At 2.5 km^2, it rises to over a minute. We would like to point out that in practice the robot can just start planning its next decision slightly before it expects to arrive at its next goal location so this planning time doesn't meaningfully impact search performance. This was an engineering detail which we didn't include because throughout the paper we evaluate the algorithms on their sample complexity rather than wall clock time. The compute on the robot is a Nuvo-8108GC with Intel Xeon E-2278GEL (Coffee Lake R) 2.0 GHz Processor - 35W.
-
 
 ### Run the STAR algorithm and recreate ablation experiments
 
