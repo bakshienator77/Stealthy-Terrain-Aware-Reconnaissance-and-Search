@@ -61,6 +61,7 @@ N. A. Bakshi and J. Schneider are with the Robotics Institute, School of Compute
 
 Please cite the following paper to use the code:
 
+``````
 @inproceedings{
 bakshi2023stealthy,
 title={Stealthy Terrain-Aware Multi-Agent Active Search},
