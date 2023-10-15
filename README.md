@@ -4,7 +4,7 @@ Unofficial name: S.T.A.R. this if you have G.U.T.S.
 
 Example of a Target being Detected | Desert mountainous Search Region
 :-----------------------------:|:-----------:
-<img src="./target-detection-example.gif" alt="Target detection" height="" width=""/> <img src="./map-example.gif" alt="map example" width="" height=""/> | <img src="./desert_mountainous_with_recbot.png" alt="desert mountainous"  width="" height=""/>
+<img src="./images/target-detection-example.gif" alt="Target detection" height="" width=""/> <img src="./images/map-example.gif" alt="map example" width="" height=""/> | <img src="./images/desert_mountainous_with_recbot.png" alt="desert mountainous"  width="" height=""/>
 Overhead View of the Scene on top |   The fullsize robots pictured in the massive region
 
 A known terrain map informs stealthy behaviour such as moving through regions of greater concealment (for eg. between/close around mountains) as well as efficient search behaviours such as searching in better hiding places.
