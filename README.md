@@ -6,6 +6,8 @@ Example of a Target being Detected | Overhead View of the Scene on the left | St
 :-------------------------:|:----------------------------:|:----------------------:
 <img src="./target-detection-example.gif" alt="Target detection" width="1400"/> | <img src="./map-example.gif" alt="map example" width="1400"/> | ![desert_mountainous_with_recbot.png](./desert_mountainous_with_recbot.png)
 
+A known terrain map informs stealthy behaviour such as moving through regions of greater concealment (for eg. between/close around mountains) as well as efficient search behaviours such as searching in better hiding places.
+
 Published in Conference on Robot Learning (CoRL) 2023
 
 ```
