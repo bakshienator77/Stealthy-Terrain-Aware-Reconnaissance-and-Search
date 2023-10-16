@@ -58,3 +58,7 @@ More detailed instructions to follow to recreate experiments.
 N. A. Bakshi and J. Schneider are with the Robotics Institute, School of Computer Science, Carnegie Mellon University, Pittsburgh, PA 15213
 
 (c) Nikhil Angad Bakshi 2023 (nabakshi@cs.cmu.edu)
+
+### Acknowledgements
+
+This material is based upon work supported by the U.S. Army Research Office and the U.S. Army Futures Command under Contract No. W911NF-20-D-0002. Authors would like to acknowledge the contributions of Conor Igoe, Tejus Gupta and Arundhati Banerjee to the development of the STAR algorithm. Additionally the work on the physical platforms and true-to-life simulations were enabled thanks to Herman Herman, Jesse Holdaway, Prasanna Kannappan, Luis Ernesto Navarro-Serment, Maxfield Kassel and Trenton Tabor.
