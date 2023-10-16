@@ -143,7 +143,6 @@ def transform_pose(input_pose, from_frame, to_frame, timestamp=None):
     # **Assuming /tf2 topic is being broadcasted
     tf_buffer = tf2_ros.Buffer()
     listener = tf2_ros.TransformListener(tf_buffer)
-    # print(tf_buffer.registration.print_me())
     pose_stamped = tf2_geometry_msgs.PoseStamped()
     pose_stamped.pose = input_pose
     pose_stamped.header.frame_id = from_frame
@@ -151,16 +150,13 @@ def transform_pose(input_pose, from_frame, to_frame, timestamp=None):
         pose_stamped.header.stamp = rospy.Time.now()
     else:
         pose_stamped.header.stamp = timestamp
-    # rospy.sleep(0.1)
     try:
         # ** It is important to wait for the listener to start listening. Hence the rospy.Duration(1)
-        # print(tf_buffer.lookup)
         output_pose_stamped = tf_buffer.transform(pose_stamped, to_frame)#, rospy.Duration(10))
         return output_pose_stamped.pose
 
     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
         rospy.loginfo("Houston we have a problem with the transform (%s->%s)..."%(from_frame, to_frame) + str(e))
-        # rospy.loginfo("Pose in question: " + str(pose_stamped) )
 
 def is_within_search_region(point_3d, search_polygon_msg):
     '''
@@ -202,16 +198,6 @@ def globworld2earth(trackdata):
     ptst.point.x = trackdata.position.y
 
     return ptst
-
-# def earth2globworld(ptst):
-#     track = TrackData()
-#     track.header = ptst.header
-#     print
-#     track.header.frame_id = "global_world"
-#     track.position.z = ptst.point.z
-#     track.position.x = ptst.point.y
-#     track.position.y = ptst.point.x
-#     return track
 
 def earth2map(point_stamped):
     pose_map = None
@@ -255,17 +241,9 @@ def grid2grid(pos, old_cell_size, new_cell_size):
 def costmap2slice(grid_coords, cmap_arr, cell_size):
     # costmap msg because eventually we would want to continually and persistently update within the waypoint planner
     costmap_coords = grid2grid(grid_coords, cell_size, 0.5)
-    # print("grid_coords: ", grid_coords)
-    # print("costmap_coords: ", costmap_coords)
     bottom_left = (np.array(costmap_coords)).astype(int)
-    # print("bottom_left_coords: ", bottom_left)
     top_right = (np.array(costmap_coords) + 2*cell_size).astype(int)
-    # print("top_right_coords: ", top_right)
-    # print("Costmap dimension inside NATS: ", cmap_arr.shape, " is first dimension bigger?")
-    # print("Slicing: ", bottom_left[0]," to ", top_right[0], " and ", bottom_left[1], " to ", top_right[1])
     return cmap_arr[bottom_left[0]:top_right[0], bottom_left[1]:top_right[1]]
-
-# def robogrid2grid()
 
 def init_searchpolygon_marker(publisher):
     '''
@@ -290,8 +268,6 @@ def update_null_observation(pose_map, nats_obj, robot_type, grid_coord, robot_na
     if grid_coord != (l, h, d):
         nats_obj.robot_path.append((l, h))
         nats_obj.robot_path_timestamps.append(rospy.get_time())
-        # print("Updated robot_path: ", len(nats_obj.robot_path))
-        # print("Updated robot_path_timestamps: ", len(nats_obj.robot_path_timestamps))
         if robot_name is None:
             robot_name = nats_obj.robot_name
         if nats_obj.robot_path_dict.get(robot_name, None) is None:

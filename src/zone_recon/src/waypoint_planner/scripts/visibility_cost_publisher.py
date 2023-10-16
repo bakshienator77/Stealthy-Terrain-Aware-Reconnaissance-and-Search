@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Code for the work:
 
@@ -18,10 +20,7 @@ year={2023},
 url={https://openreview.net/forum?id=eE3fsO5Mi2}
 }
 """
-#!/usr/bin/env python
 
-
-#
 
 import rospy
 from waypoint_planner.waypoint_planner_utils import SendMessage, GetMessage, rgb2gray, OccupancyGrid
@@ -98,14 +97,11 @@ if __name__ == '__main__':
             with_prior = with_prior * np.flipud(visibility_prior)
 
         clipped_grid = 99 * with_prior / np.max(with_prior)
-        # clipped_grid = 100 * np.flipud(visibility_prior)
         print("Shape of clipped grid: ", clipped_grid.shape)
         print("Max of clipped grid: ", np.max(clipped_grid), "min of clipped grid: ", np.min(clipped_grid))
         flat_repeat = clipped_grid.reshape(-1, 1).flatten()
         data = flat_repeat.astype(int)
         heatmap.data = list(data)
-        # print("heatmap max: ", max(heatmap.data), " min: ", min(heatmap.data), "heatmap stats: ", Counter(heatmap.data))
-        # print(publisher)
         heatmap.info.height = costmap.msg.info.height
         heatmap.info.width = costmap.msg.info.width
         heatmap.info.resolution = rospy.get_param("~costmap_cell_size")

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Code for the work:
 
@@ -18,10 +20,6 @@ year={2023},
 url={https://openreview.net/forum?id=eE3fsO5Mi2}
 }
 """
-#!/usr/bin/env python
-
-
-#
 
 from __future__ import print_function
 
@@ -157,7 +155,6 @@ class TrackSubscriber():
         self.verbose = verbose
         self.callback_modifier = callback_modifier
         self.previous_tracks = dict()
-        # self.points_dict = points_dict
         self.timer = rospy.rostime.get_rostime()
         self.nats_obj = nats_obj
         self.marker_publisher = SendMessage(rospy.get_param("~detected_threats_topic"), MarkerArray)
@@ -189,7 +186,6 @@ class TrackSubscriber():
             marker.type = Marker.SPHERE
             marker.color.a = 1.0
             self.fill_pose_info(marker, point, track, uncertainty)
-            # print(marker.pose)
             markerarray_msg.markers.append(marker)
 
     def fill_pose_info(self, marker, point, track, circle=False):
@@ -283,10 +279,7 @@ class TrackSubscriber():
                 self.populate_marker_msg(self.marker_publisher.msg, map_pose_position, track, False)
                 # print("shape of x is: ", x.shape)
                 x[0, h*self.nats_obj.n1 + l] = 1  # one-hot with cell in which track currently is
-                # self.nats_obj.points_dict['Y'] = np.append(self.nats_obj.points_dict['Y'], Y, axis=0)
                 # TODO: Is par even used?
-                # self.nats_obj.points_dict['par'] = [0, np.array([grid_coords[0]*grid_coords[1]])]
-                # self.nats_obj.points_dict['X'] = np.append(self.nats_obj.points_dict['X'], x, axis=0)
                 # print("We are updating: ", x, Y)
                 if not np.any(self.nats_obj.points_dict['X']):
                     # first time
@@ -642,21 +635,12 @@ if __name__ == '__main__':
         sigma2 = 0.005  # noise variance on observations
         trl = sum([ord(c) for c in robot_name]) # responsible for generating a random_state
 
-        # Omni view assumption
-        # noise_vec = np.tile(np.array([sigma2, 4 * sigma2]), 4)
-        # Old Ramina assumption
-        # noise_vec = np.append(np.append(np.array(1*[sigma2,sigma2, sigma2]),
-        #                                  np.repeat(4*sigma2,5)),np.repeat(9*sigma2,7))
-        # Directional view assumption
-        # noise_vec = np.append(np.array([sigma2]), np.array([4*sigma2]))
         noise_vec = dict()
         noise_vec["uas"] = np.array([8*sigma2])
         # Omni view assumption
         if rospy.get_param("~fov_setting") == "conservative":
             noise_vec["ugv"] = np.tile(np.array([sigma2, 4 * sigma2]), 4)
         elif rospy.get_param("~fov_setting") == "viewshed":
-            # noise_vec = np.append(np.append(np.array(1*[sigma2,sigma2, sigma2]),
-            #                                  np.repeat(4*sigma2,5)),np.repeat(9*sigma2,7))
             noise_vec["ugv"] = np.array([sigma2/5, sigma2, 4 * sigma2, 9 * sigma2])
         else:
             rospy.loginfo("Who do you, Who do you, Who do you, WHo do you think you are? ha ha ha wrong fov_setting in nats_param.yaml file")
@@ -742,7 +726,6 @@ if __name__ == '__main__':
                         os.makedirs(noise_aware_ts.logging_path)
 
                 initialize_request = False
-            # rospy.sleep(0.1)
             pose = local_pose.get_copy()
 
 

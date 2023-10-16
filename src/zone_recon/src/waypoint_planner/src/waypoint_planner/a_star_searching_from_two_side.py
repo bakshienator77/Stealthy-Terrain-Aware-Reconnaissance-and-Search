@@ -18,8 +18,31 @@ year={2023},
 url={https://openreview.net/forum?id=eE3fsO5Mi2}
 }
 """
+
 """
 A* algorithm
+
+Adapted from:
+
+@article{DBLP:journals/corr/abs-1808-10703,
+  author       = {Atsushi Sakai and
+                  Daniel Ingram and
+                  Joseph Dinius and
+                  Karan Chawla and
+                  Antonin Raffin and
+                  Alexis Paques},
+  title        = {PythonRobotics: a Python code collection of robotics algorithms},
+  journal      = {CoRR},
+  volume       = {abs/1808.10703},
+  year         = {2018},
+  url          = {http://arxiv.org/abs/1808.10703},
+  eprinttype    = {arXiv},
+  eprint       = {1808.10703},
+  timestamp    = {Mon, 03 Sep 2018 13:36:40 +0200},
+  biburl       = {https://dblp.org/rec/journals/corr/abs-1808-10703.bib},
+  bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
 """
 
 from __future__ import absolute_import

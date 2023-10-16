@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Code for the work:
 
@@ -18,7 +20,6 @@ year={2023},
 url={https://openreview.net/forum?id=eE3fsO5Mi2}
 }
 """
-#!/usr/bin/env python
 from __future__ import print_function
 
 
@@ -43,8 +44,6 @@ from anon_msgs.msg import AutonomyActionGoal, AutonomyGoal, AutonomyAction
 import threading
 from std_msgs.msg import Float32MultiArray
 
-# threading_lock = threading.Lock()
-
 
 class AutonomyServer:
     def __init__(self, topic, action):
@@ -63,7 +62,6 @@ class AutonomyServer:
             # Only if visibility cost weightage is non zero
             self.visibility_map_subscriber = GetMessage(rospy.get_param("~viz_costmap_topic_lowres"), Float32MultiArray,
                                                         callback_modifier=self.msg_to_viz_costmap,
-                                                        # threading_lock=threading_lock
                                                         )
             self.set_visibility_prior()
 
@@ -82,26 +80,19 @@ class AutonomyServer:
         self.visibility_prior = np.flipud(
             np.array(Image.fromarray(255 * visibility_prior).resize((self.n2, self.n1)).convert("L"))).T
         rospy.loginfo("Visibility prior dimensions " + str(self.visibility_prior.shape))
-        # self.visibility_prior /= np.max(self.visibility_prior)
-        # print("VISIBILITY PRIOR UNNORMALIZED ", np.max(self.visibility_prior), np.min(self.visibility_prior))
 
     def msg_to_viz_costmap(self, float32multiarray_msg):
-        # rospy.loginfo("\n\n\nYOU HAVE ENTERED THE VISIBILITY COSTMAP CALLBACK\n\n\n")
         data_vector = np.array(float32multiarray_msg.data).flatten()
 
         if sum(data_vector) == 0:
             with_prior = self.visibility_prior
         else:
             reorient_grid = data_vector.reshape((self.n2, self.n1))
-            # print("Shape of repeated grid: ", reorient_grid.shape)
-            # print("Shape needed: ", self.n1, self.n2)
             with_prior = reorient_grid / np.max(reorient_grid)
             with_prior[with_prior == 0] = 0.05
-            # print("Shape of visibility prior: ", self.visibility_prior.shape)
             with_prior = with_prior * self.visibility_prior
 
         clipped_grid = with_prior # / np.max(with_prior)
-        # clipped_grid = 100 * np.flipud(visibility_prior)
         print("Shape of clipped grid: ", clipped_grid.shape)
         print("Max of clipped grid: ", np.max(clipped_grid), "min of clipped grid: ", np.min(clipped_grid))
         self.visibility_costmap = clipped_grid
@@ -127,12 +118,10 @@ class AutonomyServer:
         local_pose_msg.header.stamp = rospy.Time.now()
         local_pose_msg.header.frame_id = rospy.get_param("~robot_name") + rospy.get_param("~map_frame")
         coords = grid2map(start, cell_size=self.cell_size)
-        # print(coords)
         # Transform to map coords
         local_pose_msg.pose.pose.position.x = coords[1]
         local_pose_msg.pose.pose.position.y = coords[0]
         quaternion = quaternion_from_euler(0, 0, direction * 1.57)
-        # print("grid direction: ", result['grid_pos'][2], " corresponds to quaternion in map frame: ", quaternion)
         local_pose_msg.pose.pose.orientation.x = quaternion[0]
         local_pose_msg.pose.pose.orientation.y = quaternion[1]
         local_pose_msg.pose.pose.orientation.z = quaternion[2]
@@ -142,11 +131,6 @@ class AutonomyServer:
 
     def set_allowable_grid_locs(self, cmap_arr, costmap_vacancy_threshold, grid_cell_size, robot_type):
         costmap_cell_size = rospy.get_param("~costmap_cell_size")
-        # cmap_arr = cmap_arr.astype(np.float)
-        # plt.imshow(cmap_arr)
-        # print(cmap_arr)
-        # plt.savefig("/home/nabakshi/src/zone_recon/temporary_debug_costmap.png")
-        # plt.close()
         costmap_array = 255 * np.ones((self.n2, self.n1))
         for h in range(0, self.n2):
             for l in range(0, self.n1):
@@ -167,7 +151,6 @@ class AutonomyServer:
         img = np.flipud(rgb2gray(image.imread(
             working_dir + "autonomy_assets/locations/" + rospy.get_param("~location") + "/map/" + rospy.get_param(
                 "~map_type") + "_map.png")))
-        # print("LOOOOOOOOOK HERE: ", len((100 * (img.flatten() < 0.5)).tolist()))
         costmap_msg = OccupancyGrid()
         costmap_msg.data = (100 * (img.flatten() < 0.5)).tolist()
         costmap_msg.header.stamp = rospy.Time.now()
@@ -193,8 +176,6 @@ class AutonomyServer:
                 cell_size)))  # by default each cell in grid is 0.5m x 0.5m, we want it to be cell_size x cell_size
         rospy.loginfo(
             "AUTONOMY FAKER: Grid-size:%dx%d with each cell %dmx%dm" % (self.n1, self.n2, cell_size, cell_size))
-        # self.costmap_array = np.array(
-        #     Image.fromarray(255 * img.astype(np.float)).resize((self.n2, self.n1)).convert("L")).T
         self.costmap_array = self.set_allowable_grid_locs(img, costmap_vacancy_threshold, self.cell_size, rospy.get_param("~robot_type"))
         self.top_vertex = self.costmap_array.shape
         self.bottom_vertex = (0, 0)
@@ -202,18 +183,10 @@ class AutonomyServer:
 
     def execute(self, goal):
         # plan path and return here
-        #
         self.waypoint_number += 1
 
         if self.logging_path is None:
             self.logging_path = rospy.get_param("~logging_path")
-            # plt.imshow(self.costmap_array)
-            # plt.savefig(self.logging_path + "temporary_debug_costmap.png")
-            # plt.close()
-
-        # plt.imshow(self.visibility_prior)
-        # plt.savefig(self.logging_path + "temporary_debug_viz_costmap_prior.png")
-        # plt.close()
 
         print(goal)
         end = list(map2grid(goal.path.poses[0].pose.position, self.cell_size))
@@ -225,10 +198,8 @@ class AutonomyServer:
             rospy.loginfo("Goal point not reachable because goal is on obstacle.")
             self.server.set_aborted()
             return
-        # print()
         path = searching_control(start, end, self.bound, self.obstacle, costmap=self.visibility_costmap,
                                  viz_marker=self.logging_path + str(self.waypoint_number))
-        # print(path)
         if path is None:
             # goal point not reachable
             rospy.loginfo("Goal point not reachable because path planning failed.")
@@ -269,7 +240,6 @@ if __name__ == '__main__':
 
     autonomy_server_topic = rospy.get_param("~autonomy_server_topic")
     autonomy_server = AutonomyServer(autonomy_server_topic, AutonomyAction)
-    # rospy.spin()
     # push costmap to necessary topic
     # setup the action client at the other end
     # then plan

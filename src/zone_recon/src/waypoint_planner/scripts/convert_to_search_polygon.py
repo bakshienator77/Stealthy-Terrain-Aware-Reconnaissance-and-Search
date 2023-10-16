@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Code for the work:
 
@@ -18,8 +20,6 @@ year={2023},
 url={https://openreview.net/forum?id=eE3fsO5Mi2}
 }
 """
-#!/usr/bin/env python
-
 
 import rospy
 import sys

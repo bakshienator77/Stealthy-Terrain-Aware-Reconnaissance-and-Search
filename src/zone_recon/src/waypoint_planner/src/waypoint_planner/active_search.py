@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Code for the work:
 
@@ -18,7 +20,6 @@ year={2023},
 url={https://openreview.net/forum?id=eE3fsO5Mi2}
 }
 """
-#!/usr/bin/env python
 
 from __future__ import print_function
 
@@ -54,15 +55,25 @@ import shutil
 import cProfile
 import pstats
 
-# TODO: 1. Change the zone clearing parameter to a search style like random, coverage, or nats
-# TODO: 2. See all locations where that comes into play and delete the temporary zone clearing paramter in nats_params.yaml
-# TODO: 3. Current best value for distance cost is 0.3. THis should automatically be set for ZC behaviour regardless of what
-# TODO: 3 (contd). is user specified. Better yet consider killing that parameter altogether? Or is it useful for viewshed
-# TODO: 4 Update logging config for the new visibility related topics
-
-
-
 class NATS(object):
+
+    """
+    Some code adapted from:
+    '''
+    Code for the work:
+
+    ``Multi Agent Active Search using Realistic Depth-Aware Noise Model'', Ramina Ghods, William J Durkin and Jeff Schneider
+
+    (C) Ramina Ghods 2020 (rghods@cs.cmu.edu)
+
+    @article{ghods2020multi,
+    title={Multi-Agent Active Search using Realistic Depth-Aware Noise Model},
+    author={Ghods, Ramina and Durkin, William J and Schneider, Jeff},
+    journal={arXiv preprint arXiv:2011.04825},
+    year={2020}
+    }
+    '''
+    """
 
     def __init__(self, beta, n1, mu, noise_vec, lmbd, EMitr, n_agents, trl, search_polygon, costmap):
         # theta2 # signal variance to create nonzero entries of vector beta
@@ -88,17 +99,12 @@ class NATS(object):
         self.marker_publisher = init_searchpolygon_marker(SendMessage("candidate_waypoint", Marker))
         self.marker_publisher.msg.type = Marker.LINE_STRIP
         self.marker_publisher.msg.colors = []
-        # self.marker_publisher.msg.scale.z = 5.0
-        # self.marker_publisher.msg.scale.x = 5.0
         self.marker_publisher.msg.points = []
-        # self.marker_array_publisher = SendMessage(topic="dummy_threats", msg_type=MarkerArray)
         self.sig_beta_pub = SendMessage(topic=rospy.get_param("~coverage_variance_topic"), msg_type=OccupancyGrid)
         self.beta_hat_pub = SendMessage(topic=rospy.get_param("~threats_belief_topic"), msg_type=OccupancyGrid)
-        # self.track_subscriber = TrackSubscriber(self.points_dict, topic=rospy.get_param("~track_topic"), msg_type=TrackDataVector, verbose=True)
         self.polygon_memory = None # variable that remembers latest list of points that specify search polygon
         self.allowable_grid_locations = []
         self.current_waypoint = []
-#        self.err = err
         # sigma2 is noise variance on observations: # noise variance on observations
         self.noise_vec = noise_vec # np.append(np.append(np.array(1*[sigma2,sigma2]), np.repeat(4*sigma2,4)),np.repeat(9*sigma2,6))
         # self.working_dir = "/home/unicorn/src/zone_recon/"
@@ -184,18 +190,9 @@ class NATS(object):
         self.visibility_prior = rgb2gray(self.visibility_prior)
         print("Visibility prior dimensions", self.visibility_prior.shape)
         self.visibility_prior /= np.max(self.visibility_prior)
-        # self.probability_prior = image.imread(self.working_dir + "assets/"+ \
-        #                                      rospy.get_param("~location")+"/probability_map_"+ \
-        #                                      rospy.get_param("~map_type")+".png")
-        # print("Probability prior dimensions", self.probability_prior.shape)
-        # self.probability_prior = rgb2gray(self.probability_prior)
-        # self.probability_prior /= np.max(self.probability_prior)
         self.probability_prior = compute_probability_prior(self.visibility_prior, self.costmap, self.n1, self.n2)
 
-        # print(self.probability_prior_2, self.probability_prior)
         Image.fromarray(255.0 * self.probability_prior).convert("L").save(open(self.working_dir+"probability_heightmap_path.png", "wb"))
-        # assert (self.probability_prior.shape == self.probability_prior_2.shape)
-        # assert np.array_equal(self.probability_prior, self.probability_prior_2)
         self.publish_grid(rospy.get_param("~threat_prior_inside_sp") * np.ones((self.n2, self.n1)).flatten(), self.visibility_costmap_publisher, viz_cost=True)
 
         if rospy.get_param("~robot_type") == "ugv":
@@ -312,22 +309,6 @@ class NATS(object):
                     rospy.loginfo("ZERO IF DIAGONAL MATRIX (ensure is zero on robot): %d" % divergence)
 
             Sig_beta = np.diag(1/np.diag(ginv_xtsx))
-            # rospy.loginfo("Diag inverse time: %f" % (time.time() - t_diag_inv))
-
-            # print("Are the results equal? conv v sparse: ", np.array_equal(Sig_beta, Sig_beta_s))
-            # print("Are the results equal? conv v diag: ", np.array_equal(Sig_beta, Sig_beta_d))
-            # else:
-                # Inversion of a number of observations size matrix
-                # try:
-                #     Sig_beta = Gamma - np.matmul(np.matmul(Gamma, np.transpose(X)), np.matmul(np.linalg.inv(np.diag(np.array([np.squeeze(Y[:, 1])])) + np.matmul(np.matmul(X, Gamma), np.transpose(X))), np.matmul(X, Gamma)))
-                # except:
-                #     Sig_beta = np.linalg.inv(np.matmul(np.matmul(np.transpose(X), inv_y_one), X) + np.linalg.inv(Gamma))
-                #     print("There was a failure in inversion")
-                    # pickle.dump([np.diag(np.array([np.squeeze(Y[:, 1])])), X, Gamma], open(rospy.get_param("~logging_path") + "debug_inverse_" + str(time.time())+ ".pkl", "wb"))
-                    # print(np.diag(np.array([np.squeeze(Y[:, 1])])) + np.matmul(np.matmul(X, Gamma), np.transpose(X)))
-
-            # beta_hat = sig_beta * X^T inv(y1) y0   # Nx1
-
             beta_hat_tmp = np.matmul(np.matmul(Sig_beta, np.transpose(X)), np.matmul(inv_y_one,
                                            np.reshape(Y[:,0],(-1,1)))) # mean of posterior
             
@@ -347,15 +328,9 @@ class NATS(object):
             rospy.loginfo("Potentially vectorizable bit in posterior: %f" % (t1 - t0))
 
 
-        # TODO: Experiment and log (smarter way of doing previous 3 lines)
         # We dont want negative eigenvalues bec the covariance mtrix can never have negative eignevalues
         # numerical errors due to round off etc lead to negative values sometimes
-        # print("Sig_beta in get posterior: ", Sig_beta)
         t0 = time.time()
-        # min_eig = np.amin(np.real(np.linalg.eigvals(Sig_beta)))
-        # if min_eig < 0:
-        #     Sig_beta -= 1.1* min_eig * np.eye(*Sig_beta.shape) #What's the deal here?
-        #
         min_eig = np.amin(np.real(np.linalg.eigvals(Sig_beta)))
         if min_eig <= 1e-8:
             Sig_beta = self.get_near_pd_v2(Sig_beta)
@@ -363,14 +338,10 @@ class NATS(object):
         rospy.loginfo("Ensuring positive semi def in posterior: %f" % (t1 - t0))
 
         t0 = time.time()
-        # beta_tilde = np.maximum(np.reshape(self.rng.multivariate_normal(np.squeeze(beta_hat), Sig_beta), (self.n, 1)),
-        #                         np.zeros((self.n, 1)))
-        # print("this where beta_tilde")
-        # print(np.count_nonzero(beta_tilde))
         beta_tilde = np.maximum(np.reshape(self.get_multivariate_normal(np.squeeze(beta_hat),Sig_beta, self.rng),(n,1)),np.zeros((n,1)))
-        # print(np.count_nonzero(beta_tilde))
         t1 = time.time()
         rospy.loginfo("Taking thompson sample in posterior: %f" % (t1 - t0))
+
         '''
         # even sparser belief of signals
         floorsample = ((beta_tilde)>(np.amax(beta_tilde)/2)) # The 2 just ensures sparsity
@@ -400,39 +371,20 @@ class NATS(object):
             t0 = time.time()
             b = np.repeat(copy.deepcopy(beta_hat_rsi), repeats=n, axis=1)
 
-            # pi_0_copy = copy.deepcopy(pi_0)
             for j in range(n):
-            #     b = np.zeros((n, 1))
                 b[j, j] = self.mu
-                # print('X[i] shape: ', X[i].shape)
-                # assert X[i].shape == (1,32)
-                # print('shape: ', Y[i].shape)
-                # assert(np.dot(X[i], b) == self.mu*X[i,j])
-                # pi_0[j] = np.float64(pi_0[j] * ss.norm(0, np.sqrt(Y[i, 1])).pdf(Y[i, 0] - np.dot(X[i], b)))
-                # pi_0[j] = np.float64(pi_0[j] * ss.norm(0, np.sqrt(Y[i, 1])).pdf(Y[i, 0] - self.mu*X[i,j]))
-            # assert(np.array_equal(pi_0, np.float64(np.multiply(pi_0_copy, ss.norm(0, np.sqrt(Y[i,1])).pdf(Y[i,0] - self.mu*X[i].reshape(-1,1))))))
-            # pi_0 = np.float64(pi_0 * ss.norm(0, np.sqrt(Y[i, 1])).pdf(Y[i, 0] - self.mu*X[i]).reshape(-1, 1))
             pi_0 = np.float64(pi_0 * ss.norm(0, 1).pdf(Y[i, 0] - np.dot(b, X[i])).reshape(-1, 1))/np.sqrt(Y[i, 1])
-            # print(pi_0)
-            # print(pi_0_copy)
             if np.sum(pi_0)>0:
                 pi_0 /= np.sum(pi_0)
             t_pi0_init += time.time() - t0
-            # return pi_0, pi_0, beta_rsi, None, None
-            # print(i, Y[i])
             if np.amax(pi_0) == 0.:
                 print('1-process ', os.getpid(), 'with recv_time', recv_time, ' would raise ValueError')
                 break
-                # continue
-                # raise ValueError('pi_0 max value 0.!')
             maxidxs = np.argwhere(pi_0 == np.amax(pi_0))
-            # print("Maxidxs: ", len(maxidxs), "max val: ", np.amax(pi_0))
             eps = 0.
             for ids in maxidxs:
                 eps += 1 - pi_0[ids][0]
-            # print("eps: ", eps)
             if (eps < self.err):
-                # idxs = []
                 for m in maxidxs:
                     beta_hat_rsi[m[0], :] = self.mu
 
@@ -445,7 +397,6 @@ class NATS(object):
                 if np.count_nonzero(beta_rsi) == 0:
                     print("Breaking because beta_rsi uniformly zero" )
                     break
-                # pi_0 /= np.sum(pi_0)
 
                 idxs = [ii for ii in range(n) if ii not in np.nonzero(beta_hat_rsi)[0]]
                 print("Num nonzero idxs: ", len(idxs))
@@ -482,15 +433,6 @@ class NATS(object):
         print("\n\nSecondary pi_0 calculation: ", t_pi0_second)
 
         _ = 1
-        # pi_0_full = np.zeros((self.n, 1), dtype=np.float64)
-        # np.put(pi_0_full, polygon_masker, pi_0)
-        # beta_hat_rsi_full = np.zeros((self.n, 1))
-        # np.put(beta_hat_rsi_full, polygon_masker, beta_hat_rsi)
-
-        # profiler.disable()
-        # stats = pstats.Stats(profiler).sort_stats('ncalls')
-        # stats.print_stats()
-        print()
         return _, pi_0, beta_rsi, beta_hat_rsi, _
 
     def get_visibility_cost(self, Sig_beta, beta_hat, X, polygon_masker):
@@ -521,7 +463,7 @@ class NATS(object):
                 visibility = {item: self.robogrid[h, l]["viewshed"][subdictkey][item] for subdictkey in
                               self.robogrid[h, l]["viewshed"] for item in
                               self.robogrid[h, l]["viewshed"][subdictkey]}  # this is a dict
-                # TODO: What do I want?
+                # What do I want?
                 # visibility is location in scalar value but in robogrid dimensions
                 # for every location () in visibility I want to multiply that by the beta_vis_full for the corresponding h,l
                 # in the outer loop and add it to the viz_cost_full at that location
@@ -619,7 +561,6 @@ class NATS(object):
             beta_hat_vis_full = beta_hat_vis = np.zeros_like(beta_hat) + rospy.get_param("~threat_prior_inside_sp")
             if self.current_pose:
                 oldh, oldl = start2grid(self.current_pose, grid_cell_size)
-                # print("Inside NATS: ", (oldl, oldh))
 
             else:
                 # Assumes perfection hence not good code
@@ -641,8 +582,6 @@ class NATS(object):
             rospy.loginfo("Number of points to consider on this go round: %d" % int(round(rospy.get_param("~nats_cell_selection_prob")*len(self.allowable_grid_locations))))
             cells_this_round = [self.allowable_grid_locations[i] for i in sorted(random.sample(range(len(self.allowable_grid_locations)), int(round(rospy.get_param("~nats_cell_selection_prob")*len(self.allowable_grid_locations)))))]
 
-            # print(np.roll(np.array(cells_this_round).T, 1, axis=0), (self.n2, self.n1))
-            # masker = np.ravel_multi_index(np.roll(np.array(self.allowable_grid_locations).T, 1, axis=0), (self.n2, self.n1))
             # This limits the scope/dimension of the matrices to the searcg region only so that computation is quicker
             # the reason this can be done with no issues is that NATS treats neighbouring cells as independent
 
@@ -663,7 +602,6 @@ class NATS(object):
                     beta_hat = beta_hat_full.reshape(self.n2, self.n1).T[
                         np.array(self.inpolygon_grid_locations)[:, 0], np.array(self.inpolygon_grid_locations)[:,
                                                                        1]]  # duplicate variable for compatibility with nats
-                    # beta_hat = beta_hat_full.reshape(self.n2, self.n1).T[np.array(self.inpolygon_grid_locations)[:,0], np.array(self.inpolygon_grid_locations)[:,1]]
                 else:
                     #guts or star
                     beta_tilde, Gamma, Sig_beta, beta_hat, _, ginv_xtsx, inv_y_one = self.getPosterior(X,Y,pos,recv_time)
@@ -678,8 +616,6 @@ class NATS(object):
                 # Sig_beta_full = np.diag((points_dict['X'].sum(axis=0)==0).astype(int))
                 beta_hat_full = np.zeros(self.n)
                 np.put(beta_hat_full, polygon_masker, beta_hat)
-                # beta_hat_full = (points_dict['X'] * points_dict['Y'][:, 0].reshape(-1, 1)).sum(axis=0)
-                # import ipdb; ipdb.set_trace()
                 t1 = time.time()
                 rospy.loginfo("Get posterior total time: %f" % (t1 - t0))
 
@@ -692,10 +628,6 @@ class NATS(object):
                                   viz_cost=True)
                 t1 = time.time()
                 rospy.loginfo(" visibility posterior publish total time: %f" % (t1 - t0))
-                # print(beta_hat_vis.shape)
-                # print(list(beta_hat_vis))
-                # print("Visibility Beta statistics: ", Counter(list(beta_hat_vis)))
-                # print("Visibility Cost statistics: ", Counter(list(visibility_cost_full[:,:,0].flatten())))
 
 
 
@@ -711,29 +643,19 @@ class NATS(object):
                 visibility_cost_full = np.ones((self.n2,self.n1,4))
 
             if search_mode != "rsi":
-                # print("Sigma Beta statistics: ", Counter(list(np.diag(Sig_beta_full))))
                 self.publish_grid(10 * np.diag(Sig_beta_full), self.sig_beta_pub)
-            # threat_idxs = np.array(np.nonzero(np.array(beta_tilde).reshape((self.n2, self.n1))))
-            # for num in range(len(threat_idxs[0])):
-            #     print("Threats suspected at (beta_tilde): ", threat_idxs[0][num], threat_idxs[1][num] )
             threat_idxs = np.array(np.nonzero(np.array(beta_hat_full).reshape((self.n2, self.n1))))
             for num in range(len(threat_idxs[0])):
                 print("Threats suspected at: ", threat_idxs[0][num], threat_idxs[1][num] )
 
             max_reward = float("-inf")
             k = np.count_nonzero(self.beta)
-# <<<<<<< HEAD
             beta_bar = np.zeros((len(beta_hat),1)) # what is beta_bar?
-# =======
-#             beta_bar = np.zeros((len(self.inpolygon_grid_locations),1)) # what is beta_bar?
-# >>>>>>> tejus/evaluate_multirobot
             if self.current_pose:
                 if rospy.get_param("~zone_clearing"):
-                    # rospy.loginfo("Zone clearing behaviour with fixed start point: %d %d" % (self.oldh, self.oldl))
                     oldh, oldl = self.oldh, self.oldl
                 else:
                     oldh, oldl = start2grid(self.current_pose, grid_cell_size)
-                # print("Inside NATS: ", (oldl, oldh))
             else:
                 # Assumes perfection hence not good code
                 oldl = pos[wid] % self.n1 # current length position
@@ -797,29 +719,17 @@ class NATS(object):
                         count += 1
                     else:
                         #star or guts
-                        # Xt = np.append(X,x ,axis=0)
-                        # print("Xt dimensions: ", Xt.shape)
-                        # Sig_beta including candidate x
-                        # Sig = np.linalg.inv(np.matmul(np.matmul(np.transpose(Xt),
-                        #                                              np.diag(1./np.append(np.squeeze(Y[:,1]),noise_var))),Xt)+np.linalg.inv(Gamma))
-                        # print("Gamma inside Active search: ", Gamma)
                         t0 = time.time()
-                        # t_multi = time.time()
                         ginv_xtsx_t = ginv_xtsx + np.matmul(np.matmul(np.transpose(x), np.diag(1. / np.array(noise_var))),x)
-                        # rospy.loginfo("Multiplication time: %f" % (time.time() - t_multi))
                         Sig = np.diag(1 / np.diag(ginv_xtsx_t))
                         t1 = time.time()
                         t_sig+=t1 - t0
                         #
                         t_matmul = time.time()
                         b = csc_matrix(Sig) * hstack([XTyinv_sparse, csc_matrix(np.matmul(np.transpose(x), np.diag(1. / np.array(noise_var))))])
-                        # b = np.matmul(np.matmul(Sig,np.transpose(Xt)),
-                        #                      np.diag(1./np.append(np.squeeze(Y[:,1]),noise_var))) # true y's are missing, this is not exactly beta_hat
                         t_b += time.time() - t_matmul
-                        # print("x.shape[0]: ", x.shape[0])
                         b1 = b[:,:-1*x.shape[0]] # this is the portion of b associated with obs we already have
                         b2 = b[:,-1*x.shape[0]:] # this is hte portion of b associated with the candidate x
-                        # print("This: ", b1.shape, " and this: ", np.reshape(Y[:,0],(-1,1)).shape, " should be multipliable and of dimension: ", beta_tilde.shape)
                         t_matmul = time.time()
                         xTb = np.matmul(x,beta_tilde) # assume this is the y we will receive
                         t_xTb += time.time() - t_matmul
@@ -841,7 +751,7 @@ class NATS(object):
                         real_t = (np.round(beta_tilde)>(np.amax(beta_tilde)/2))
                         # changed norm 2 loss
                         loss[h,l,d] = 1*(np.linalg.norm(beta_hat_t-beta_tilde,2)+0.01*int(~np.all(est_t==real_t)))
-                        # print("Loss at position: ", [h,l,d], " is ", loss[h,l,d])
+
                         # # norm 1 loss:
                         # xTb = np.matmul(x,beta_tilde)
                         # Si = np.reshape(noise_var,(-1,1))
@@ -850,7 +760,6 @@ class NATS(object):
                         # loss[h,l,d] = np.linalg.norm(b1Y_b,1)+np.sum(np.matmul(np.absolute(b2),E_abs_y))
                         # print("Old l: ", oldl, " Old h: ", oldh)
                         dist[h,l,d] = np.sqrt(np.absolute(oldl-l)**2+np.absolute(oldh-h)**2)
-                        # print("Dist at position: ", [h,l,d], " is ", dist[h,l,d])
                 else:
                     # Can default to random waypoint planner behaviour here bec it is not very important
                     Vinv = np.eye(polygon_masker.shape[0])*1e3
@@ -870,8 +779,6 @@ class NATS(object):
                     real_t = (np.round(beta_tilde)>(np.amax(beta_tilde)/2))
                     loss[h,l,d] = (np.linalg.norm(beta_hat_t-beta_tilde[polygon_masker,:],1)+0.01*int(~np.all(est_t==real_t)))
                     dist[h,l,d] = 0.001
-                    # print("Loss at position: ", [h,l,d], " is ", loss[h,l,d])
-                    # print("Dist at position: ", [h,l,d], " is ", dist[h,l,d])
 
                 avg_loss += loss[h,l,d]
                 avg_dist += dist[h,l,d]
@@ -898,36 +805,17 @@ class NATS(object):
                      rospy.get_param("~distance_cost_weightage") * self.normalize_ptp(dist[cells_this_round_arr[:,1],cells_this_round_arr[:,0], 0]) - \
                      rospy.get_param("~visibility_cost_weightage") * self.normalize_ptp(visibility_cost_full[cells_this_round_arr[:,1],cells_this_round_arr[:,0], 0])
 
-            # np.ravel_multi_index(np.concatenate([np.roll(np.array(cells_this_round).T, 1, axis=0), np.zeros((1,len(cells_this_round_arr)))], axis=0), (self.n2, self.n1, 4))
             reward_tmp = reward[:,:,0]
             np.put(reward_tmp, masker, reward_lite)
             reward[:,:,0] = reward_tmp
-            # print("NATS loss statistics: ", Counter(list(self.normalize_ptp(loss[cells_this_round_arr[:,1],cells_this_round_arr[:,0], 0]).flatten())))
-            # print("NATS OG loss statistics: ", Counter(list((loss[cells_this_round_arr[:,1],cells_this_round_arr[:,0], 0]/avg_loss).flatten())))
-            # print("Dist loss statistics: ", Counter(list(self.normalize_ptp(dist[cells_this_round_arr[:,1],cells_this_round_arr[:,0], 0]).flatten())))
-            # print("Dist OG loss statistics: ", Counter(list((dist/avg_dist)[cells_this_round_arr[:,1],cells_this_round_arr[:,0], 0].flatten())))
-            # print("Visibility loss statistics: ", Counter(list(self.normalize_ptp(visibility_cost_full[cells_this_round_arr[:,1],cells_this_round_arr[:,0], 0]).flatten())))
-            # print("Visibility OG loss statistics: ", Counter(list((visibility_cost_full/avg_viz)[cells_this_round_arr[:,1],cells_this_round_arr[:,0], 0].flatten())))
-
-
-            # print("Reward statistics: ", Counter(list(-reward.flatten())))
-
-            # print(loss/avg_loss)
-            # print(dist/avg_dist)
 
             print("Shape of reward: ", reward.shape)
             [hm,lm,dm] = np.unravel_index(reward.argmax(), reward.shape)
-            # [hm, lm] = cells_this_round_arr[reward.argmax()]
-            # dm = 0
 
         threat_locs = [self.inpolygon_grid_locations[j] for j in np.nonzero(beta_hat.squeeze())[0]]
 
         if rospy.get_param("~logging"):
             precision, recall = None, None
-            # if self.ground_truth_threats:
-            #     detections = set(threat_locs)
-            #     precision = 1.0*len(ground_truth & detections)/len(detections)
-            #     recall = 1.0*len(ground_truth & detections)/len(ground_truth)
 
             self.save_log(
                 {
@@ -969,9 +857,6 @@ class NATS(object):
         best_pose = Pose()
         best_pose.position.x = best_x_map
         best_pose.position.y = best_y_map
-        # best_pose_start = transform_pose(best_pose,
-        #                                  rospy.get_param("~robot_name") + rospy.get_param("~map_frame"),
-        #                                  rospy.get_param("~robot_name") + rospy.get_param("~start_frame"))
         color = ColorRGBA()
         color.r = count % 2
         color.g = (count + 1) % 2
@@ -1003,22 +888,12 @@ class NATS(object):
 
         if rospy.get_param("~logging") and (search_mode == "random" or search_mode == "coverage" or len(points_dict["X"]) == 0):
             dist = loss = reward = visibility_cost_full = np.random.randn(*(self.n2, self.n1, 4))
-            # print(Sig_beta.shape, beta_hat.shape, beta_hat_vis.shape, cells_this_round, dist.shape, loss.shape, reward.shape,
-            #                  visibility_cost_full.shape)
             self.logging_viz(Sig_beta, beta_hat.reshape(-1,1), beta_hat_vis, cells_this_round, dist, loss, reward,
                              visibility_cost_full)
-
-            #result['grid_pos'] = [4, 13, 0] # set goal close to spawn location on Gascola map; useful for debugging
         elif rospy.get_param("~logging"):
             #star guts or rsi
-            # print(Sig_beta.shape, beta_hat.shape, beta_hat_vis.shape, cells_this_round, dist.shape, loss.shape, reward.shape,
-            #                  visibility_cost_full.shape)
-            # try:
             self.logging_viz(Sig_beta, beta_hat.reshape(-1,1), beta_hat_vis, cells_this_round, dist, loss, reward,
                                  visibility_cost_full)
-            # except Exception as e:
-            #     print("Error with logging")
-            #     print(e)
         #Convert best x to desired waypoint goal
         return result
 
@@ -1026,9 +901,6 @@ class NATS(object):
         self.ground_truth_threats = []
         k = self.k
         self.probs_for_threats = np.array(self.probs_for_threats) / np.sum(self.probs_for_threats)
-        # median = np.median(self.probs_for_threats)
-        # self.probs_for_threats *= self.probs_for_threats > median
-        # self.probs_for_threats = self.probs_for_threats / np.sum(self.probs_for_threats)
 
         trl = rospy.get_param("~random_seed")
         print("NATS RANDOM SEED RECEIVED IS: ", trl, "Numebr in poly grid locs: ", len(self.inpolygon_grid_locations))
@@ -1048,20 +920,6 @@ class NATS(object):
             self.ground_truth_threats.append((self.inpolygon_grid_locations[i][0], self.inpolygon_grid_locations[i][1]))
         pkl.dump(self.ground_truth_threats, open(self.logging_path + "ground_truth_threats.pkl", "wb"))
 
-        # hidden_prior = 1 - self.visibility_prior
-        # plt.imshow(hidden_prior)
-        # print("\n\n LOOOOOOK HERE:    \n\n")
-        # for i in range(1, 110):
-        #     print(i)
-        #     rng = np.random.RandomState(i)
-        #     # idx = rng.choice(len(self.inpolygon_grid_locations), k, replace=False)
-        #     idx = rng.choice(len(self.inpolygon_grid_locations), k, replace=False, p=self.probs_for_threats)
-        #     for id in idx:
-        #         plt.scatter(120 * self.inpolygon_grid_locations[id][1]+10*np.abs(np.random.randn())+60,
-        #                     np.abs(hidden_prior.shape[0] - 120 * self.inpolygon_grid_locations[id][0])+60+10*np.abs(np.random.randn()),
-        #                     s=1)
-        # plt.savefig("/home/nabakshi/src/zone_recon/hidden_prior.png")
-        # plt.close()
 
     def logging_viz(self, Sig_beta, beta_hat, beta_hat_vis, cells_this_round, dist, loss, reward, visibility_cost_full):
         viridis = cm.get_cmap('viridis')
@@ -1207,9 +1065,6 @@ class NATS(object):
         cand_pose = Pose()
         cand_pose.position.x = cand_x_map
         cand_pose.position.y = cand_y_map
-        # cand_pose_start = transform_pose(cand_pose,
-        #                                  rospy.get_param("~robot_name") + rospy.get_param("~map_frame"),
-        #                                  rospy.get_param("~robot_name") + rospy.get_param("~start_frame"))
         self.marker_publisher.msg.colors.append(color)
         self.marker_publisher.msg.colors = self.marker_publisher.msg.colors[-20:]
         self.marker_publisher.msg.points.extend([cand_pose.position])
@@ -1218,8 +1073,6 @@ class NATS(object):
 
     def set_allowable_grid_locs(self, cmap_arr, costmap_vacancy_threshold, grid_cell_size, robot_type,
                                 search_polygon_msg):
-        # hidden_prior =
-        # hidden_prior = image.
         costmap_cell_size = rospy.get_param("~costmap_cell_size")
         self.probs_for_threats = []
         for h in range(0, self.n2):
@@ -1235,13 +1088,9 @@ class NATS(object):
                         continue
                     else:
                         self.inpolygon_grid_locations.append((l, h))
-                        # ln, hn = grid2grid((l,h), grid_cell_size, costmap_cell_size)
-                        # print(h,l, self.n2, self.n1)
                         self.probs_for_threats.append(self.probability_prior[l, h])
                         if robot_type == "ugv":
                             cmap_slice = costmap2slice((l, h), cmap_arr, grid_cell_size)
-                            # rospy.loginfo("LOOK here for values: " + str(np.count_nonzero(cmap_slice)/(cmap_slice.shape[0] * cmap_slice.shape[1])) )
-                            # print("cmap_slice non-zero entries at ", (l,h), " : ", np.count_nonzero(cmap_slice), "should be MAX 3600")
                             if float(np.count_nonzero(cmap_slice))/(cmap_slice.shape[0] * cmap_slice.shape[1]) > (1 - costmap_vacancy_threshold):
                                 # If the non-zero cost cells exceed a certain threshold a.k.a not freespace cells
                                 continue
@@ -1269,11 +1118,6 @@ class NATS(object):
             publisher.msg = msg
             publisher.publish()
             return
-            # heatmap.info.height = self.n1
-            # heatmap.info.width = self.n2
-            # heatmap.info.resolution = rospy.get_param("~cell_size")
-        # heatmap.data = list(np.repeat(np.array(np.clip(np.diag(Sig_beta.astype(int)), 0, 100)), int(rospy.get_param("~cell_size")/rospy.get_param("~costmap_cell_size"))))[:19 * 47**3]
-        # print(heatmap.data.reshape(47**2, 47*19))
         origin = Pose()
         origin.position.x = 0
         origin.position.y = 0
@@ -1350,7 +1194,6 @@ class NATS(object):
                          "h":[[point[0] for point in view] for idx in range(4)]} # looking straight down
         else:
             # ground robot
-            # print("ugv viewshed")
             ######## ----- COnvservative FOV ------ ##########
             if self.fov_setting == "conservative":
                 viewsheds = {"l":[[l, l], [l+1, l+2], [l, l], [l-1, l-2]],
@@ -1372,12 +1215,8 @@ class NATS(object):
             ls = np.array(viewsheds["l"][d])
             hs = np.array(viewsheds["h"][d])
             # ROBOGRID is consistent with above weird convention
-            # print(self.robogrid[h, l]["viewshed"])
-            # visibility = self.robogrid[h, l]["viewshed"][(d- 1) % 4] # this is a dict
-            # print("Visibility in direction, ", (d- 1) % 4, " is ", visibility)
             if h < self.rg_xlim and l < self.rg_ylim:
                 visibility = self.robogrid[h, l]["viewshed"][d] # this is a dict
-            # print("Visibility in direction, ", d, " is ", visibility)
         elif robot_type == "ugv":
             ######## ----- COnvservative FOV ------ ##########
             #             [ ]
@@ -1459,10 +1298,5 @@ class NATS(object):
             x = x[to_keep_idxs]
             non_zero_idx = [non_zero_idx[ix] for ix in to_keep_idxs]
             noise_var = [noise_var[ix] for ix in to_keep_idxs]
-        # print("l,h is: ", (l,h), "x shape at this time is: ", x.shape)
-        # print("Corresponding to this the pos in gridspace is: ", h*self.n1+l)
-        # print("Corresponding to this the pos in robogridspace is: ", h*self.rg_xlim+l)
-        # self.robogrid[h,l]["viewshed"]
-        # print(np.array(non_zero_idx), np.array(noise_var), non_zero_2idx)
 
         return x, np.array(non_zero_idx), np.array(noise_var)

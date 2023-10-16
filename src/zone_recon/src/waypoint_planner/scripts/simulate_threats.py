@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Code for the work:
 
@@ -18,11 +20,6 @@ year={2023},
 url={https://openreview.net/forum?id=eE3fsO5Mi2}
 }
 """
-#!/usr/bin/env python
-
-
-#
-# REACH HALFWAY DIVINE ORDER SQUARE SUPREME BINGO RUSH
 
 from __future__ import print_function
 
@@ -133,7 +130,6 @@ if __name__ == '__main__':
     print("Number of cells are %d"%(n1*n2))
     
     ## Publish search polygon
-# <<<<<<< HEAD
     searchpolygon_publisher = SendMessage(topic = rospy.get_param("~search_polygon_topic"), msg_type=SearchPolygon, latched=True)
     while (searchpolygon_publisher.pub.get_num_connections() < 1):
         rospy.sleep(0.5)
@@ -173,13 +169,6 @@ if __name__ == '__main__':
     while time.time() < t+1:
         searchpolygon_publisher.publish()
         rospy.sleep(0.1)
-# =======
-#     searchpolygon_subscriber = GetMessage(topic = rospy.get_param("~search_polygon_topic"), msg_type=SearchPolygon)
-#
-#     while searchpolygon_subscriber.msg is None:
-#         print("Waiting for search polygon")
-#         rospy.sleep(0.5)
-# >>>>>>> tejus/evaluate_multirobot
         
     ##
     ## Fake Perception
@@ -210,12 +199,6 @@ if __name__ == '__main__':
     visibility_prior = rgb2gray(visibility_prior)
     print("Visibility prior dimensions", visibility_prior.shape)
     visibility_prior /= np.max(visibility_prior)
-    # probability_prior = image.imread(working_dir + "assets/" + \
-    #                                       rospy.get_param("~location") + "/probability_map_" + \
-    #                                       rospy.get_param("~map_type") + ".png")
-    # print("Probability prior dimensions", probability_prior.shape)
-    # probability_prior = rgb2gray(probability_prior)
-    # probability_prior /= np.max(probability_prior)
     probability_prior = compute_probability_prior(visibility_prior, costmap, n1, n2)
 
     probs = []
@@ -254,26 +237,6 @@ if __name__ == '__main__':
 
     sigma2 = 0.005
     noise_vec = np.tile(np.array([sigma2, 4 * sigma2]), 4)
-    # noise_vec = np.array([sigma2 / 5, sigma2, 4 * sigma2, 9 * sigma2])
-    # def update_threat_list(threat_msg):
-    #     print("Updating threat list")
-    #     global beta
-    #     beta_copy = np.zeros((n,1))
-    #     for threat in threat_msg.threat_list:
-    #         print("Threat at %d,%d"%(threat.x, threat.y))
-    #         beta_copy[int(threat.y*n1+threat.x), 0] = mu
-    #
-    #     beta = beta_copy
-    #     global observed
-    #     observed = []
-    #
-    #     return
-    #
-    # threat_subscriber = GetMessage(topic = "groundtruth_threats", msg_type=ThreatVector, callback_modifier=update_threat_list)
-    # while not threat_subscriber.msg:
-    #     print("waiting for threats")
-    #     rospy.sleep(1)
-    # rospy.sleep(10)
     print("THREAT FAKING FOR FOR ROBOT: ", robot_name, "with threat breakdown set to: ", rospy.get_param("~threat_breakdown"))
     all_topics = rospy.get_published_topics()
     # print("All topics: ", all_topics)
@@ -302,13 +265,6 @@ if __name__ == '__main__':
     print("publishers: ", track_publishers)
 
     last_pos = [-1,-1, -1]
-
-# =======
-#     observed = []
-#     sigma2 = 0.005
-#     noise_vec = np.tile(np.array([sigma2, 4 * sigma2]), 4)
-#     rng = np.random.RandomState(0)
-# >>>>>>> tejus/evaluate_multirobot
 
     def simulate_tracks(pose_msg):
         if "start" in pose_msg.header.frame_id:
@@ -357,16 +313,9 @@ if __name__ == '__main__':
                 tf_buffer = tf2_ros.Buffer()
                 listener = tf2_ros.TransformListener(tf_buffer)
 
-                # earth_pose = None
-                # while not earth_pose and not rospy.is_shutdown():
-                #     try:
-                #         earth_pose = tf_buffer.transform(map_pose, "earth_zero", rospy.Duration(2))
-                #     except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException) as e:
-                #         rospy.loginfo("Houston we have a problem with the transforms..." + str(e))
                 track.header.frame_id = robot_name + rospy.get_param("~map_frame")
                 track.position.x = map_pose.pose.position.x
                 track.position.y = map_pose.pose.position.y
-                ##
 
                 t = rospy.get_rostime()
                 track.latest_observation_timestamp = int(1000*rospy.Time.from_sec(time.time()).to_sec())
@@ -376,8 +325,6 @@ if __name__ == '__main__':
 
                 msg.data.append(track)
             
-                # track_publisher.publish()
-                # print("publishing threat")
             [p.pub.publish(msg) for p in track_publishers]
         return
         

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Code for the work:
 
@@ -18,8 +20,6 @@ year={2023},
 url={https://openreview.net/forum?id=eE3fsO5Mi2}
 }
 """
-#!/usr/bin/env python
-
 
 import rospy
 from waypoint_planner.waypoint_planner_utils import SendMessage, GetMessage, transform_pose
@@ -70,7 +70,6 @@ if __name__ == '__main__':
             msg.header.frame_id = "earth"
         # anything bad if the robot_id isn't set?
         msg.robot_id = robot_name
-        # print(msg)
         [p.pub.publish(msg) for p in publishers]
         return
 
